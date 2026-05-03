@@ -255,6 +255,13 @@ function buildCard(recipe, ingredientsLower, idx) {
             ${recipe.additional_ingredients.map(ing => `<span class="ing-tag need">${escHtml(ing)}</span>`).join('')}
           </div>
         </div>` : ''}
+      ${recipe.equipment && recipe.equipment.length > 0 ? `
+        <div class="ingredient-section">
+          <div class="section-label">🍳 Equipment</div>
+          <div class="ingredient-tags">
+            ${recipe.equipment.map(e => `<span class="ing-tag equipment">${escHtml(e)}</span>`).join('')}
+          </div>
+        </div>` : ''}
       <div class="steps-section">
         <button class="steps-toggle">
           <span>${recipe.steps.length} steps</span>

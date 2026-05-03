@@ -334,6 +334,7 @@ body {
 }
 .ing-tag.have { background: var(--accent-light); color: var(--accent); }
 .ing-tag.need { background: #f0ece4; color: #5c5248; }
+.ing-tag.equipment { background: #eef2ff; color: #3730a3; }
 
 /* ── Steps ── */
 .steps-toggle {

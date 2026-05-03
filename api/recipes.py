@@ -23,7 +23,9 @@ class handler(BaseHTTPRequestHandler):
                     'Each recipe must have exactly these fields: '
                     'name (string), description (string), time_minutes (integer), '
                     'skill_level (integer 1-5), ingredients_used (array of strings), '
-                    'additional_ingredients (array of strings), steps (array of strings).'
+                    'additional_ingredients (array of strings), '
+                    'equipment (array of strings — pots, pans, tools needed e.g. "large skillet", "baking sheet"), '
+                    'steps (array of strings).'
                 ),
                 messages=[{
                     'role': 'user',
