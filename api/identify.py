@@ -40,7 +40,11 @@ class handler(BaseHTTPRequestHandler):
             )
 
             text = next(b.text for b in response.content if b.type == 'text')
-            text = text.strip().removeprefix('```json').removeprefix('```').removesuffix('```').strip()
+            text = text.strip()
+            if text.startswith('```json'): text = text[7:]
+            if text.startswith('```'): text = text[3:]
+            if text.endswith('```'): text = text[:-3]
+            text = text.strip()
             self.send_json(200, json.loads(text))
 
         except Exception as e:
