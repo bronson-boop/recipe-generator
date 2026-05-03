@@ -15,7 +15,7 @@ class handler(BaseHTTPRequestHandler):
             servings     = body.get('servings', 2)
             max_time     = body.get('max_time', 0)
             max_skill    = body.get('max_skill', 5)
-            count        = body.get('count', 4)
+            count        = body.get('count', 3)
             cuisine      = body.get('cuisine', '')
             meal_type    = body.get('meal_type', '')
             budget_mode  = body.get('budget_mode', False)
@@ -56,24 +56,19 @@ class handler(BaseHTTPRequestHandler):
                 src = f'I have: {", ".join(ingredients)}. Use as many as possible. additional_ingredients = only things to buy.'
 
             schema = (
-                'Return JSON with a "recipes" array. Each recipe must have EXACTLY these fields: '
-                'name (string), description (string), skill_description (string, plain English e.g. "Just stir and heat"), '
-                'cuisine (string), meal_type (breakfast/lunch/dinner/snack/dessert), '
+                'Return JSON with a "recipes" array. Each recipe has EXACTLY these fields: '
+                'name, description, cuisine, meal_type (breakfast/lunch/dinner/snack/dessert), '
                 'time_minutes (int), skill_level (int 1-5), calories_per_serving (int), '
-                'nutrition ({protein_g, carbs_g, fat_g, fiber_g} ints), '
-                'estimated_cost_total (string, realistic dollar range for whole recipe e.g. "$8–12"), '
-                'estimated_cost_per_serving (string, per person e.g. "$4–6"), '
-                'carbon_footprint ("Low"/"Medium"/"High"), '
-                'allergens (array: nuts/gluten/dairy/eggs/fish/shellfish/soy), '
-                'wine_pairing (one short sentence), leftover_ideas (array of 2 short strings), '
-                'ingredients_used (array), additional_ingredients (array), equipment (array), steps (array). '
-                'Keep steps concise — one sentence each.'
+                'estimated_cost_total (e.g. "$8-12"), estimated_cost_per_serving (e.g. "$4-6"), '
+                'allergens (array from: nuts/gluten/dairy/eggs/fish/shellfish/soy), '
+                'ingredients_used (array), additional_ingredients (array), equipment (array), '
+                'steps (array, one short sentence each).'
             )
 
             client = anthropic.Anthropic()
             resp = client.messages.create(
-                model='claude-sonnet-4-6',
-                max_tokens=6000,
+                model='claude-haiku-4-5',
+                max_tokens=4000,
                 system=f'You are a recipe generator. Respond with valid JSON only — no markdown, no fences.\n{schema}',
                 messages=[{'role':'user','content':(
                     f'{src}\n\nGenerate {count} diverse recipes.\n\n'
