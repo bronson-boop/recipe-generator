@@ -294,6 +294,12 @@ function setLoading(on, msg = 'Loading…') {
   if (on) document.getElementById('loadingMsg').textContent = msg;
 }
 
+// Press Escape to dismiss loading if stuck
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') setLoading(false);
+});
+document.getElementById('loadingOverlay').addEventListener('click', () => setLoading(false));
+
 function formatTime(mins) {
   if (mins < 60) return `${mins} min`;
   const h = Math.floor(mins / 60), m = mins % 60;
