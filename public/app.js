@@ -173,10 +173,20 @@ document.getElementById('backFromManual').addEventListener('click', () => {
 });
 
 // ── Recipe generation ──
+async function fetchWithTimeout(url, options, ms = 55000) {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), ms);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(id);
+  }
+}
+
 async function generateRecipes(ingredients) {
   setLoading(true, 'Finding your recipes…');
   try {
-    const res = await fetch('/api/recipes', {
+    const res = await fetchWithTimeout('/api/recipes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ingredients })
@@ -185,7 +195,8 @@ async function generateRecipes(ingredients) {
     if (!res.ok) throw new Error(data.error || 'Something went wrong');
     renderRecipes(data.recipes, ingredients);
   } catch (err) {
-    alert(err.message || 'Failed to generate recipes. Please try again.');
+    const msg = err.name === 'AbortError' ? 'Request timed out — please try again.' : (err.message || 'Failed to generate recipes.');
+    alert(msg);
   } finally {
     setLoading(false);
   }
