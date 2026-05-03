@@ -51,7 +51,7 @@ function applyTheme(dark) {
   document.getElementById('darkToggle').textContent = dark?'☀️':'🌙';
   localStorage.setItem('darkMode', dark?'1':'0');
 }
-applyTheme(localStorage.getItem('darkMode')==='1');
+applyTheme(false); // default light
 document.getElementById('darkToggle').addEventListener('click', ()=> applyTheme(document.documentElement.getAttribute('data-theme')!=='dark'));
 
 // ── Streak ──
@@ -146,7 +146,26 @@ function buildFiltersPanel(id) {
 
 // ── Landing ──
 document.getElementById('photoBtn').addEventListener('click',()=>document.getElementById('photoInput').click());
-document.getElementById('manualBtn').addEventListener('click',()=>{buildFiltersPanel('manualFilters');showPage('pageManual');setTimeout(()=>document.getElementById('manualIngredientInput').focus(),100)});
+document.getElementById('manualBtn').addEventListener('click',()=>{
+  buildFiltersPanel('manualFilters');
+  buildQuickAdd();
+  showPage('pageManual');
+  setTimeout(()=>document.getElementById('manualIngredientInput').focus(),100);
+});
+
+function buildQuickAdd() {
+  const row = document.getElementById('quickAddRow');
+  if (!row) return;
+  const common = ['🧄 Garlic','🍋 Lemon','🧅 Onion','🍗 Chicken','🥚 Eggs','🧀 Cheese','🍅 Tomatoes','🥬 Spinach','🍚 Rice','🍝 Pasta'];
+  row.innerHTML = common.map(i=>`<button class="quick-add-btn">${i}</button>`).join('');
+  row.querySelectorAll('.quick-add-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const name = btn.textContent.replace(/^\S+\s/,''); // strip emoji
+      addManualIng(name);
+      btn.style.opacity='.35';btn.style.pointerEvents='none';
+    });
+  });
+}
 document.getElementById('surpriseBtn').addEventListener('click',()=>generateRecipes([],true));
 document.getElementById('landingSavedBtn').addEventListener('click',showSaved);
 document.getElementById('landingGroceryBtn').addEventListener('click',openGrocery);
