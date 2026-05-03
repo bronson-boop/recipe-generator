@@ -354,25 +354,24 @@ function buildCard(recipe, ingLower, idx) {
   card.innerHTML=`
     <div class="card-hero" style="background:${heroColor}">
       <div class="card-hero-emoji">${heroEmoji}</div>
+      ${cooked?`<span class="cooked-badge">✓ Cooked</span>`:''}
       <div class="card-actions">
-        ${cooked?`<span class="cooked-badge">✓ Cooked</span>`:''}
         <button class="card-btn save-btn ${isSaved?'saved':''}">${isSaved?'❤️':'🤍'}</button>
         ${filters.chefStyle?`<button class="card-btn chef-show-btn">🎬</button>`:''}
         <button class="card-btn cook-btn">👨‍🍳</button>
         <button class="card-btn share-btn">📤</button>
       </div>
       <div class="card-hero-content">
+        ${(recipe.cuisine||recipe.meal_type)?`<div class="card-type-chip">${escHtml(recipe.cuisine||(recipe.meal_type||''))}</div>`:''}
         <div class="card-name">${escHtml(recipe.name)}</div>
         <div class="card-description">${escHtml(recipe.description)}</div>
-        ${recipe.skill_description?`<div class="skill-plain">${escHtml(recipe.skill_description)}</div>`:''}
       </div>
     </div>
 
     <div class="card-stats">
-      <div class="card-stat"><div class="card-stat-val">${escHtml(formatTime(recipe.time_minutes))}</div><div class="card-stat-key">Time</div></div>
-      <div class="card-stat"><div class="card-stat-val" style="color:var(--skill-${sk})">${sk}/5</div><div class="card-stat-key">Skill</div></div>
-      <div class="card-stat"><div class="card-stat-val">${recipe.calories_per_serving?`${Math.round(recipe.calories_per_serving*scale)}`:'—'}</div><div class="card-stat-key">Cal/serv</div></div>
-      <div class="card-stat"><div class="card-stat-val">${scaledServings}</div><div class="card-stat-key">Servings</div></div>
+      <div class="card-stat"><div class="card-stat-val">${escHtml(formatTime(recipe.time_minutes))}</div><div class="card-stat-key">⏱ Time</div></div>
+      <div class="card-stat"><div class="card-stat-val" style="color:var(--skill-${sk})">${skLabel}</div><div class="card-stat-key">⭐ Level</div></div>
+      <div class="card-stat"><div class="card-stat-val">${recipe.calories_per_serving?`${Math.round(recipe.calories_per_serving*scale)} cal`:'—'}</div><div class="card-stat-key">🔥 Per serving</div></div>
     </div>
 
     ${recipe.estimated_cost_total?`
@@ -388,11 +387,7 @@ function buildCard(recipe, ingLower, idx) {
     </div>`:``}
 
     <div class="card-badges">
-      <span class="badge badge-skill skill-${sk}">⭐ ${skLabel}</span>
-      ${recipe.carbon_footprint?`<span class="badge badge-light">🌱 ${escHtml(recipe.carbon_footprint)} footprint</span>`:''}
-      ${recipe.cuisine?`<span class="badge badge-light">🍴 ${escHtml(recipe.cuisine)}</span>`:''}
-      ${recipe.meal_type?`<span class="badge badge-light">${escHtml(recipe.meal_type)}</span>`:''}
-      <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(recipe.name+' recipe')}" target="_blank" class="badge badge-light" style="text-decoration:none">▶ Watch</a>
+      <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(recipe.name+' recipe')}" target="_blank" class="badge badge-light" style="text-decoration:none">▶ Watch on YouTube</a>
       ${allergens.filter(a=>a!=='none').map(a=>`<span class="allergen-badge">⚠️ ${escHtml(a)}</span>`).join('')}
     </div>
 

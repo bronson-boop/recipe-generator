@@ -108,30 +108,32 @@
 
 <!-- RESULTS PAGE -->
 <div id="pageResults" class="page" hidden>
-  <div class="results-section">
-    <div class="results-header">
-      <div>
-        <h2 id="resultsTitle">Recipes for you</h2>
-        <div class="results-meta" id="resultsMeta"></div>
+  <div class="results-banner">
+    <div class="results-banner-inner">
+      <div class="results-banner-top">
+        <button class="btn-back-light" id="resetBtn">← Back</button>
+        <div class="results-actions">
+          <button class="btn-icon-pill" id="luckyBtn">🎰 Lucky</button>
+          <button class="btn-icon-pill" id="groceryBtn">🛒 Groceries</button>
+          <button class="btn-icon-pill" id="savedBtn">❤️ Saved</button>
+          <button class="btn-icon-pill" id="printBtn">🖨 Print</button>
+        </div>
       </div>
-      <div class="results-actions">
-        <button class="btn-icon-pill" id="luckyBtn">🎰 Lucky</button>
-        <button class="btn-icon-pill" id="groceryBtn">🛒 Groceries</button>
-        <button class="btn-icon-pill" id="savedBtn">❤️ Saved</button>
-        <button class="btn-icon-pill" id="printBtn">🖨 Print</button>
-        <button class="btn-reset" id="resetBtn">← Back</button>
+      <h2 id="resultsTitle">Recipes for you</h2>
+      <div class="results-meta" id="resultsMeta"></div>
+      <div class="results-toolbar">
+        <input type="text" id="searchBar" placeholder="🔍 Search recipes…" class="search-bar"/>
+        <select id="sortSelect" class="toolbar-select">
+          <option value="">Sort by…</option>
+          <option value="time">Quickest first</option>
+          <option value="skill">Easiest first</option>
+          <option value="calories">Lowest calories</option>
+          <option value="cost">Cheapest first</option>
+        </select>
       </div>
     </div>
-    <div class="results-toolbar">
-      <input type="text" id="searchBar" placeholder="🔍 Search recipes…" class="search-bar"/>
-      <select id="sortSelect" class="toolbar-select">
-        <option value="">Sort by…</option>
-        <option value="time">Quickest first</option>
-        <option value="skill">Easiest first</option>
-        <option value="calories">Lowest calories</option>
-        <option value="cost">Cheapest first</option>
-      </select>
-    </div>
+  </div>
+  <div class="recipe-grid-wrap">
     <div class="recipe-grid" id="recipeGrid"></div>
   </div>
 </div>
