@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What Can I Cook?</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="logo">🍳</div>
+      <h1>What Can I Cook?</h1>
+      <p class="subtitle">Type in what you've got — get recipes that actually work.</p>
+
+      <div class="input-area">
+        <div class="tag-input-wrapper" id="tagWrapper">
+          <div class="tags" id="tagList"></div>
+          <input
+            type="text"
+            id="ingredientInput"
+            placeholder="Type an ingredient, press Enter or comma…"
+            autocomplete="off"
+          />
+        </div>
+        <button id="generateBtn" class="btn-generate" disabled>
+          <span class="btn-text">Find Recipes</span>
+          <span class="btn-icon">→</span>
+        </button>
+      </div>
+
+      <p class="hint">Try: chicken, garlic, lemon, spinach, pasta</p>
+    </div>
+  </div>
+
+  <div class="results-section" id="resultsSection" hidden>
+    <div class="results-header">
+      <h2 id="resultsTitle">Recipes for you</h2>
+      <button class="btn-reset" id="resetBtn">← Start over</button>
+    </div>
+    <div class="recipe-grid" id="recipeGrid"></div>
+  </div>
+
+  <div class="loading-overlay" id="loadingOverlay" hidden>
+    <div class="loading-card">
+      <div class="spinner"></div>
+      <p>Finding your recipes…</p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
