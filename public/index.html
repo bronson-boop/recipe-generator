@@ -8,50 +8,105 @@
 </head>
 <body>
 
-<!-- LANDING -->
+<!-- DASHBOARD -->
 <div id="pageLanding" class="page active">
-  <div class="hero">
-    <div class="hero-topbar">
-      <button class="topbar-btn" id="streakBtn" title="Cooking streak">🔥 <span id="streakCount">0</span></button>
-      <button class="topbar-btn" id="rotdBtn" title="Recipe of the day">⭐ Today</button>
-      <button class="topbar-btn" id="darkToggle" title="Dark mode">🌙</button>
-      <button class="topbar-btn" id="profileBtn" title="Profile">👤</button>
-    </div>
-    <div class="hero-top">
-      <div class="logo">🍳</div>
-      <h1>What Can I Cook?</h1>
-      <p class="subtitle">Tell us what's in your fridge.<br>We'll make it delicious. ✨</p>
-    </div>
-    <div class="option-cards">
-      <button class="option-card snap" id="photoBtn">
-        <span class="option-icon">📸</span>
-        <div class="option-text"><span class="option-title">Snap a photo</span><span class="option-desc">Take a pic of your fridge</span></div>
-        <span class="option-arrow">→</span>
-      </button>
-      <button class="option-card type" id="manualBtn">
-        <span class="option-icon">✏️</span>
-        <div class="option-text"><span class="option-title">Type them in</span><span class="option-desc">List what you have</span></div>
-        <span class="option-arrow">→</span>
-      </button>
-      <button class="option-card surprise" id="surpriseBtn">
-        <span class="option-icon">🎲</span>
-        <div class="option-text"><span class="option-title">Surprise me</span><span class="option-desc">Random fridge recipes</span></div>
-        <span class="option-arrow">→</span>
-      </button>
-    </div>
-    <div class="landing-secondary">
-      <button class="saved-bar-btn" id="cookAgainBtn">🔄 Cook again</button>
-      <button class="saved-bar-btn" id="historyBtn">🕐 History</button>
-      <button class="saved-bar-btn" id="landingSavedBtn">❤️ Saved</button>
-      <button class="saved-bar-btn" id="landingGroceryBtn">🛒 Groceries</button>
-      <button class="saved-bar-btn" id="plannerBtn">📅 Meal Plan</button>
-      <button class="saved-bar-btn" id="fridgeBtn">🧊 Fridge</button>
-    </div>
-    <div class="trending-bar">
-      <span class="trending-label">Trending:</span>
-      <div id="trendingTags" class="trending-tags"></div>
+
+  <!-- Header -->
+  <div class="dash-header">
+    <div class="dash-header-inner">
+      <div class="dash-top-row">
+        <div class="dash-greeting-wrap">
+          <div class="dash-hello" id="dashHello">Good morning 👋</div>
+          <div class="dash-app-name">What Can I Cook?</div>
+        </div>
+        <div class="dash-topbar">
+          <button class="dash-topbar-btn" id="rotdBtn" title="Recipe of the day">⭐</button>
+          <button class="dash-topbar-btn" id="darkToggle" title="Dark mode">🌙</button>
+          <button class="dash-topbar-btn" id="profileBtn" title="Profile">👤</button>
+        </div>
+      </div>
+      <!-- Stats strip -->
+      <div class="dash-stats-strip">
+        <div class="dash-stat-pill" id="streakBtn">
+          <span class="dsp-icon">🔥</span>
+          <span class="dsp-val" id="streakCount">0</span>
+          <span class="dsp-label">Streak</span>
+        </div>
+        <div class="dash-stat-pill" id="dashSavedStat">
+          <span class="dsp-icon">❤️</span>
+          <span class="dsp-val" id="dashSavedCount">0</span>
+          <span class="dsp-label">Saved</span>
+        </div>
+        <div class="dash-stat-pill" id="dashGroceryStat">
+          <span class="dsp-icon">🛒</span>
+          <span class="dsp-val" id="dashGroceryCount">0</span>
+          <span class="dsp-label">Groceries</span>
+        </div>
+        <div class="dash-stat-pill" id="dashCookedStat">
+          <span class="dsp-icon">👨‍🍳</span>
+          <span class="dsp-val" id="dashCookedCount">0</span>
+          <span class="dsp-label">Cooked</span>
+        </div>
+      </div>
     </div>
   </div>
+
+  <!-- Dashboard body -->
+  <div class="dash-body">
+
+    <!-- Let's Cook -->
+    <div class="dash-section">
+      <div class="dash-section-hd">Let's Cook</div>
+      <div class="dash-cook-grid">
+        <button class="dash-cook-card snap" id="photoBtn">
+          <span class="dcc-icon">📸</span>
+          <span class="dcc-title">Snap a photo</span>
+          <span class="dcc-desc">ID ingredients from a pic</span>
+        </button>
+        <button class="dash-cook-card type" id="manualBtn">
+          <span class="dcc-icon">✏️</span>
+          <span class="dcc-title">Type it in</span>
+          <span class="dcc-desc">List what you have</span>
+        </button>
+        <button class="dash-cook-card surprise" id="surpriseBtn">
+          <span class="dcc-icon">🎲</span>
+          <span class="dcc-title">Surprise me</span>
+          <span class="dcc-desc">Random pantry recipes</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Today -->
+    <div class="dash-section">
+      <div class="dash-section-hd">Today <button class="dash-section-link" id="plannerBtn">Meal planner →</button></div>
+      <div id="dashTodayContent"></div>
+    </div>
+
+    <!-- Recent activity -->
+    <div class="dash-section">
+      <div class="dash-section-hd">Recent <button class="dash-section-link" id="historyBtn">See all</button></div>
+      <div id="dashRecentContent"></div>
+    </div>
+
+    <!-- Trending -->
+    <div class="dash-section">
+      <div class="dash-section-hd">Trending now 🌶</div>
+      <div id="trendingTags" class="dash-trending-tags"></div>
+    </div>
+
+    <!-- More features -->
+    <div class="dash-section">
+      <div class="dash-section-hd">More</div>
+      <div class="dash-more-grid">
+        <button class="dash-more-btn" id="cookAgainBtn"><span class="dmb-icon">🔄</span><span class="dmb-label">Cook Again</span></button>
+        <button class="dash-more-btn" id="landingSavedBtn"><span class="dmb-icon">❤️</span><span class="dmb-label">Saved</span></button>
+        <button class="dash-more-btn" id="landingGroceryBtn"><span class="dmb-icon">🛒</span><span class="dmb-label">Groceries</span></button>
+        <button class="dash-more-btn" id="fridgeBtn"><span class="dmb-icon">🧊</span><span class="dmb-label">Fridge</span></button>
+      </div>
+    </div>
+
+  </div>
+
   <input type="file" id="photoInput" accept="image/*" capture="environment" hidden/>
 </div>
 

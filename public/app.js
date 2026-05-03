@@ -43,7 +43,89 @@ function showPage(id) {
   document.getElementById('pageCook').classList.remove('active');
   const p = document.getElementById(id);
   p.hidden=false; p.classList.add('active'); window.scrollTo(0,0);
+  if (id === 'pageLanding') updateDashboard();
 }
+
+// ── Dashboard ──
+function updateDashboard() {
+  // Greeting
+  const hour = new Date().getHours();
+  const name = profile.name ? `, ${profile.name}` : '';
+  const greetText = hour < 5 ? `Working late?${name} 🌙`
+    : hour < 12 ? `Good morning${name} 👋`
+    : hour < 17 ? `Good afternoon${name} ☀️`
+    : `Good evening${name} 🌆`;
+  const helloEl = document.getElementById('dashHello');
+  if (helloEl) helloEl.textContent = greetText;
+
+  // Stats
+  document.getElementById('streakCount').textContent = streakData.count;
+  document.getElementById('dashSavedCount').textContent = savedRecipes.length;
+  document.getElementById('dashGroceryCount').textContent = groceryList.filter(g=>!g.checked).length;
+  document.getElementById('dashCookedCount').textContent = cookedLog.length;
+
+  // Today's meal
+  const todayContent = document.getElementById('dashTodayContent');
+  if (todayContent) {
+    const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const todayDay = DAY_NAMES[new Date().getDay()];
+    const todayMeal = mealPlan[todayDay];
+    if (todayMeal) {
+      const recipe = [...currentRecipes,...savedRecipes].find(r=>r.name===todayMeal);
+      const sk = recipe?.skill_level||0;
+      const skLabel = ['','Beginner','Easy','Intermediate','Advanced','Expert'][sk]||'';
+      todayContent.innerHTML = `
+        <div class="dash-today-card">
+          <div class="dash-today-hero">
+            <div class="dash-today-label">📅 ${todayDay}'s meal</div>
+            <div class="dash-today-name">${escHtml(todayMeal)}</div>
+            ${recipe?`<div class="dash-today-meta">⏱ ${formatTime(recipe.time_minutes)} · ⭐ ${skLabel}</div>`:''}
+          </div>
+          <div class="dash-today-actions">
+            ${recipe?`<button class="dash-today-btn cook-today-btn">👨‍🍳 Cook now</button>`:''}
+            <button class="dash-today-btn change-btn">📅 Change meal</button>
+          </div>
+        </div>`;
+      if (recipe) todayContent.querySelector('.cook-today-btn').addEventListener('click',()=>startCookMode(recipe));
+      todayContent.querySelector('.change-btn').addEventListener('click',showPlanner);
+    } else {
+      todayContent.innerHTML = `
+        <div class="dash-today-empty">
+          <div class="dash-today-empty-icon">📅</div>
+          <p>No meal planned for ${todayDay}</p>
+          <button class="dash-link-btn plan-btn">Plan my week →</button>
+        </div>`;
+      todayContent.querySelector('.plan-btn').addEventListener('click',showPlanner);
+    }
+  }
+
+  // Recent activity
+  const recentContent = document.getElementById('dashRecentContent');
+  if (recentContent) {
+    if (!history_.length) {
+      recentContent.innerHTML = `<div class="dash-empty-msg">Generate some recipes to see them here!</div>`;
+    } else {
+      const heroEmojis2 = {italian:'🍝',mexican:'🌮',asian:'🍜',mediterranean:'🥗',american:'🍔',indian:'🍛',french:'🥐',breakfast:'🍳',lunch:'🥪',dinner:'🍽',snack:'🍎',dessert:'🎂'};
+      const items = history_.slice(0,3).map((h,i)=>{
+        const r = h.recipes?.[0];
+        const key = (r?.cuisine||r?.meal_type||'').toLowerCase();
+        const emoji = Object.entries(heroEmojis2).find(([k])=>key.includes(k))?.[1]||'🍳';
+        const title = h.surprise?'🎲 Surprise recipes':`${h.ingredients.slice(0,3).join(', ')}${h.ingredients.length>3?'…':''}`;
+        const meta = `${h.recipes?.length||0} recipes · ${h.date}`;
+        return `<div class="dash-recent-card" data-i="${i}"><div class="dash-recent-emoji">${emoji}</div><div class="dash-recent-info"><div class="dash-recent-title">${escHtml(title)}</div><div class="dash-recent-meta">${escHtml(meta)}</div></div><span class="dash-recent-arrow">›</span></div>`;
+      }).join('');
+      recentContent.innerHTML = `<div class="dash-recent-list">${items}</div>`;
+      recentContent.querySelectorAll('.dash-recent-card').forEach(card=>{
+        card.addEventListener('click',()=>{ const h=history_[+card.dataset.i]; renderRecipes(h.recipes,h.ingredients); });
+      });
+    }
+  }
+}
+
+// Stat pill click handlers
+document.getElementById('dashSavedStat').addEventListener('click', showSaved);
+document.getElementById('dashGroceryStat').addEventListener('click', openGrocery);
+document.getElementById('dashCookedStat').addEventListener('click', showHistory);
 
 // ── Dark mode ──
 function applyTheme(dark) {
@@ -51,7 +133,7 @@ function applyTheme(dark) {
   document.getElementById('darkToggle').textContent = dark?'☀️':'🌙';
   localStorage.setItem('darkMode', dark?'1':'0');
 }
-applyTheme(false); // default light
+applyTheme(localStorage.getItem('darkMode')==='1');
 document.getElementById('darkToggle').addEventListener('click', ()=> applyTheme(document.documentElement.getAttribute('data-theme')!=='dark'));
 
 // ── Streak ──
@@ -75,13 +157,15 @@ updateStreak();
 // ── Trending tags ──
 function buildTrending() {
   const seasonal = SEASONAL[season]||[];
-  const tags = [...seasonal.slice(0,2), ...TRENDING.slice(0,6)];
+  const tags = [...seasonal.slice(0,2), ...TRENDING.slice(0,8)];
   const el = document.getElementById('trendingTags');
+  if (!el) return;
   el.innerHTML = tags.map(t=>`<button class="trending-tag">${t}</button>`).join('');
   el.querySelectorAll('.trending-tag').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       if (!manualIngredients.includes(btn.textContent)) manualIngredients.push(btn.textContent);
       buildFiltersPanel('manualFilters');
+      buildQuickAdd();
       showPage('pageManual');
       renderManualTags(); updateManualBtn();
     });
