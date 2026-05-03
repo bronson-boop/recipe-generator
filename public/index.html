@@ -16,7 +16,6 @@
         <h1>What Can I Cook?</h1>
         <p class="subtitle">Tell us what's in your fridge.<br>We'll make it delicious. ✨</p>
       </div>
-
       <div class="option-cards">
         <button class="option-card snap" id="photoBtn">
           <span class="option-icon">📸</span>
@@ -34,6 +33,18 @@
           </div>
           <span class="option-arrow">→</span>
         </button>
+        <button class="option-card surprise" id="surpriseBtn">
+          <span class="option-icon">🎲</span>
+          <div class="option-text">
+            <span class="option-title">Surprise me</span>
+            <span class="option-desc">Random recipes from a typical fridge</span>
+          </div>
+          <span class="option-arrow">→</span>
+        </button>
+      </div>
+      <div class="saved-bar">
+        <button class="saved-bar-btn" id="landingSavedBtn">❤️ Saved recipes</button>
+        <button class="saved-bar-btn" id="landingGroceryBtn">🛒 Grocery list</button>
       </div>
     </div>
     <input type="file" id="photoInput" accept="image/*" capture="environment" hidden />
@@ -51,11 +62,12 @@
         </div>
       </div>
       <div id="photoIngredientArea" hidden>
-        <p class="section-label">Ingredients found — remove any that are wrong, add anything missing:</p>
+        <p class="section-label">Ingredients found — remove any that are wrong:</p>
         <div class="tag-input-wrapper" id="photoTagWrapper">
           <div class="tags" id="photoTagList"></div>
           <input type="text" id="photoIngredientInput" placeholder="Add more…" autocomplete="off" />
         </div>
+        <div class="filters-panel" id="photoFilters"></div>
         <button class="btn-generate" id="photoGenerateBtn">Find Recipes →</button>
       </div>
     </div>
@@ -71,6 +83,7 @@
         <div class="tags" id="manualTagList"></div>
         <input type="text" id="manualIngredientInput" placeholder="e.g. chicken, garlic, lemon…" autocomplete="off" />
       </div>
+      <div class="filters-panel" id="manualFilters"></div>
       <button class="btn-generate" id="manualGenerateBtn" disabled>Find Recipes →</button>
     </div>
   </div>
@@ -80,9 +93,56 @@
     <div class="results-section">
       <div class="results-header">
         <h2 id="resultsTitle">Recipes for you</h2>
-        <button class="btn-reset" id="resetBtn">← Start over</button>
+        <div class="results-actions">
+          <button class="btn-icon-pill" id="groceryBtn">🛒 Grocery list</button>
+          <button class="btn-icon-pill" id="savedBtn">❤️ Saved</button>
+          <button class="btn-reset" id="resetBtn">← Back</button>
+        </div>
       </div>
       <div class="recipe-grid" id="recipeGrid"></div>
+    </div>
+  </div>
+
+  <!-- SAVED RECIPES PAGE -->
+  <div id="pageSaved" class="page" hidden>
+    <div class="results-section">
+      <div class="results-header">
+        <h2>Saved Recipes</h2>
+        <button class="btn-reset" id="backFromSaved">← Back</button>
+      </div>
+      <div class="recipe-grid" id="savedGrid"></div>
+      <p id="savedEmpty" class="empty-msg" hidden>No saved recipes yet. Hit ❤️ on any recipe to save it!</p>
+    </div>
+  </div>
+
+  <!-- GROCERY LIST MODAL -->
+  <div class="modal-overlay" id="groceryModal" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h3>🛒 Grocery List</h3>
+        <button class="modal-close" id="groceryClose">×</button>
+      </div>
+      <div id="groceryItems" class="grocery-items"></div>
+      <p id="groceryEmpty" class="empty-msg" hidden>No items yet. Hit + on any "Also needed" ingredient.</p>
+      <div class="modal-footer">
+        <button class="btn-copy" id="groceryCopy">Copy list</button>
+        <button class="btn-clear" id="groceryClear">Clear all</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHARE MODAL -->
+  <div class="modal-overlay" id="shareModal" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h3>📤 Share Recipe</h3>
+        <button class="modal-close" id="shareClose">×</button>
+      </div>
+      <p class="share-label">Copy this link to share:</p>
+      <div class="share-url-wrap">
+        <input type="text" id="shareUrl" readonly />
+        <button class="btn-copy" id="shareCopy">Copy</button>
+      </div>
     </div>
   </div>
 
@@ -91,6 +151,7 @@
     <div class="loading-card">
       <div class="spinner"></div>
       <p id="loadingMsg">Finding your recipes…</p>
+      <button class="btn-cancel" id="loadingCancel">Cancel</button>
     </div>
   </div>
 
