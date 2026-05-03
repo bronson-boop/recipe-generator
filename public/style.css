@@ -375,14 +375,17 @@ body {
 
 /* ── Loading ── */
 .loading-overlay {
+  display: none;
   position: fixed;
   inset: 0;
   background: rgba(247,245,240,.85);
   backdrop-filter: blur(4px);
-  display: flex;
   align-items: center;
   justify-content: center;
   z-index: 100;
+}
+.loading-overlay.visible {
+  display: flex;
 }
 .loading-card {
   background: var(--surface);

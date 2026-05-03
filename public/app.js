@@ -290,7 +290,7 @@ document.getElementById('resetBtn').addEventListener('click', () => {
 // ── Helpers ──
 function setLoading(on, msg = 'Loading…') {
   const overlay = document.getElementById('loadingOverlay');
-  overlay.hidden = !on;
+  overlay.classList.toggle('visible', on);
   if (on) document.getElementById('loadingMsg').textContent = msg;
 }
 
