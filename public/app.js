@@ -312,33 +312,71 @@ function buildCard(recipe, ingLower, idx) {
   const allergens=recipe.allergens||[];
   const nutrition=recipe.nutrition||{};
 
+  // Pick hero colour + emoji based on cuisine/meal type
+  const heroColors = {
+    italian:'linear-gradient(135deg,#c0392b,#e74c3c)',
+    mexican:'linear-gradient(135deg,#d35400,#e67e22)',
+    asian:'linear-gradient(135deg,#c0392b,#8e44ad)',
+    mediterranean:'linear-gradient(135deg,#27ae60,#2980b9)',
+    american:'linear-gradient(135deg,#2c3e50,#e74c3c)',
+    indian:'linear-gradient(135deg,#f39c12,#e74c3c)',
+    french:'linear-gradient(135deg,#2980b9,#8e44ad)',
+    breakfast:'linear-gradient(135deg,#f39c12,#f7931e)',
+    lunch:'linear-gradient(135deg,#27ae60,#2ecc71)',
+    dinner:'linear-gradient(135deg,#8e44ad,#3498db)',
+    snack:'linear-gradient(135deg,#e74c3c,#ff6b9d)',
+    dessert:'linear-gradient(135deg,#ff6b9d,#f39c12)',
+  };
+  const heroEmojis = {italian:'🍝',mexican:'🌮',asian:'🍜',mediterranean:'🥗',american:'🍔',indian:'🍛',french:'🥐',breakfast:'🍳',lunch:'🥪',dinner:'🍽',snack:'🍎',dessert:'🎂'};
+  const heroKey = (recipe.cuisine||recipe.meal_type||'').toLowerCase();
+  const heroColor = Object.entries(heroColors).find(([k])=>heroKey.includes(k))?.[1] || 'linear-gradient(135deg,#ff6b35,#f7931e)';
+  const heroEmoji = Object.entries(heroEmojis).find(([k])=>heroKey.includes(k))?.[1] || '🍳';
+
   card.innerHTML=`
-    <div class="card-header">
-      <div class="card-header-top">
-        <div class="card-name">${escHtml(recipe.name)}</div>
-        <div class="card-actions">
-          ${cooked?`<span class="cooked-badge">✓ Cooked</span>`:''}
-          <button class="card-btn save-btn ${isSaved?'saved':''}" title="Save">${isSaved?'❤️':'🤍'}</button>
-          ${filters.chefStyle?`<button class="card-btn chef-show-btn" title="Chef show">🎬</button>`:''}
-          <button class="card-btn cook-btn" title="Cook mode">👨‍🍳</button>
-          <button class="card-btn share-btn" title="Share">📤</button>
-        </div>
+    <div class="card-hero" style="background:${heroColor}">
+      <div class="card-hero-emoji">${heroEmoji}</div>
+      <div class="card-actions">
+        ${cooked?`<span class="cooked-badge">✓ Cooked</span>`:''}
+        <button class="card-btn save-btn ${isSaved?'saved':''}">${isSaved?'❤️':'🤍'}</button>
+        ${filters.chefStyle?`<button class="card-btn chef-show-btn">🎬</button>`:''}
+        <button class="card-btn cook-btn">👨‍🍳</button>
+        <button class="card-btn share-btn">📤</button>
       </div>
-      <div class="card-description">${escHtml(recipe.description)}</div>
-      ${recipe.skill_description?`<div class="skill-plain">${escHtml(recipe.skill_description)}</div>`:''}
-      ${allergens.length?`<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">${allergens.filter(a=>a!=='none').map(a=>`<span class="allergen-badge">⚠️ ${escHtml(a)}</span>`).join('')}</div>`:''}
+      <div class="card-hero-content">
+        <div class="card-name">${escHtml(recipe.name)}</div>
+        <div class="card-description">${escHtml(recipe.description)}</div>
+        ${recipe.skill_description?`<div class="skill-plain">${escHtml(recipe.skill_description)}</div>`:''}
+      </div>
     </div>
-    <div class="card-meta">
-      <span class="meta-badge">⏱ ${escHtml(formatTime(recipe.time_minutes))}</span>
-      <span class="meta-badge skill-badge skill-${sk}">⭐ ${sk}/5 · ${skLabel}</span>
-      <span class="meta-badge">🍽 ${scaledServings} serving${scaledServings!==1?'s':''}</span>
-      ${recipe.calories_per_serving?`<span class="meta-badge">🔥 ~${Math.round(recipe.calories_per_serving*scale)} cal</span>`:''}
-      ${recipe.estimated_cost?`<span class="meta-badge">💰 ${escHtml(recipe.estimated_cost)}</span>`:''}
-      ${recipe.carbon_footprint?`<span class="meta-badge">🌱 ${escHtml(recipe.carbon_footprint)}</span>`:''}
-      ${recipe.cuisine?`<span class="meta-badge">🍴 ${escHtml(recipe.cuisine)}</span>`:''}
-      ${recipe.meal_type?`<span class="meta-badge">${escHtml(recipe.meal_type)}</span>`:''}
-      <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(recipe.name+' recipe')}" target="_blank" class="meta-badge" style="text-decoration:none;cursor:pointer">▶ Watch</a>
+
+    <div class="card-stats">
+      <div class="card-stat"><div class="card-stat-val">${escHtml(formatTime(recipe.time_minutes))}</div><div class="card-stat-key">Time</div></div>
+      <div class="card-stat"><div class="card-stat-val" style="color:var(--skill-${sk})">${sk}/5</div><div class="card-stat-key">Skill</div></div>
+      <div class="card-stat"><div class="card-stat-val">${recipe.calories_per_serving?`${Math.round(recipe.calories_per_serving*scale)}`:'—'}</div><div class="card-stat-key">Cal/serv</div></div>
+      <div class="card-stat"><div class="card-stat-val">${scaledServings}</div><div class="card-stat-key">Servings</div></div>
     </div>
+
+    ${recipe.estimated_cost_total?`
+    <div class="card-cost-bar">
+      <div>
+        <div class="card-cost-total">${escHtml(recipe.estimated_cost_total)}</div>
+        <div class="card-cost-label">total estimated cost</div>
+      </div>
+      <div class="card-cost-detail">
+        <div class="card-cost-per">${escHtml(recipe.estimated_cost_per_serving||'')}</div>
+        <div class="card-cost-label">per person</div>
+      </div>
+    </div>`:``}
+
+    <div class="card-badges">
+      <span class="badge badge-skill skill-${sk}">⭐ ${skLabel}</span>
+      ${recipe.carbon_footprint?`<span class="badge badge-light">🌱 ${escHtml(recipe.carbon_footprint)} footprint</span>`:''}
+      ${recipe.cuisine?`<span class="badge badge-light">🍴 ${escHtml(recipe.cuisine)}</span>`:''}
+      ${recipe.meal_type?`<span class="badge badge-light">${escHtml(recipe.meal_type)}</span>`:''}
+      <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(recipe.name+' recipe')}" target="_blank" class="badge badge-light" style="text-decoration:none">▶ Watch</a>
+      ${allergens.filter(a=>a!=='none').map(a=>`<span class="allergen-badge">⚠️ ${escHtml(a)}</span>`).join('')}
+    </div>
+
     <div class="card-body">
       <div class="scale-row">
         <span class="scale-label">Scale:</span>
@@ -348,8 +386,8 @@ function buildCard(recipe, ingLower, idx) {
       </div>
 
       ${[...haveIngs,...extraIngs].length>0?`
-        <div class="ingredient-section" style="margin-top:10px">
-          <div class="section-label">Ingredients used</div>
+        <div class="ingredient-section" style="margin-top:12px">
+          <div class="section-label">Ingredients you have</div>
           <div class="ingredient-tags">
             ${[...haveIngs,...extraIngs].map(ing=>`<span class="ing-tag ${haveIngs.includes(ing)?'have':'need'} clickable" data-ing="${escHtml(ing)}" title="Click to swap">${escHtml(ing)}</span>`).join('')}
           </div>
@@ -361,20 +399,20 @@ function buildCard(recipe, ingLower, idx) {
 
       ${(recipe.additional_ingredients||[]).length?`
         <div class="ingredient-section">
-          <div class="section-label">Also needed</div>
+          <div class="section-label">Need to buy</div>
           <div class="ingredient-tags">
-            ${recipe.additional_ingredients.map(ing=>{const inL=groceryList.some(g=>g.name.toLowerCase()===ing.toLowerCase());return`<span class="ing-tag need ${inL?'in-list':''}">${escHtml(ing)}<button class="add-grocery" title="Add to grocery list">${inL?'✓':'+'}</button></span>`}).join('')}
+            ${recipe.additional_ingredients.map(ing=>{const inL=groceryList.some(g=>g.name.toLowerCase()===ing.toLowerCase());return`<span class="ing-tag need ${inL?'in-list':''}">${escHtml(ing)}<button class="add-grocery">${inL?'✓':'+'}</button></span>`}).join('')}
           </div>
         </div>`:``}
 
       ${(recipe.equipment||[]).length?`
         <div class="ingredient-section">
-          <div class="section-label">🍳 Equipment</div>
+          <div class="section-label">Equipment</div>
           <div class="ingredient-tags">${recipe.equipment.map(e=>`<span class="ing-tag equipment">${escHtml(e)}</span>`).join('')}</div>
         </div>`:``}
 
       ${nutrition.protein_g?`
-        <button class="card-expand-btn" data-expand="nutrition"><span>📊 Nutrition per serving</span><em class="chev">▾</em></button>
+        <button class="card-expand-btn"><span>📊 Nutrition per serving</span><em class="chev">▾</em></button>
         <div class="card-expand-content">
           <div class="nutrition-grid">
             <div class="nutrition-item"><div class="nutrition-val">${Math.round((nutrition.protein_g||0)*scale)}g</div><div class="nutrition-key">Protein</div></div>
@@ -384,7 +422,7 @@ function buildCard(recipe, ingLower, idx) {
           </div>
         </div>`:``}
 
-      ${recipe.wine_pairing?`<div style="font-size:13px;color:var(--text-muted);padding:8px 0;border-top:1px solid var(--border);margin-top:8px">🍷 ${escHtml(recipe.wine_pairing)}</div>`:``}
+      ${recipe.wine_pairing?`<div style="font-size:13px;color:var(--text-muted);padding:10px 0;border-top:1px solid var(--border);margin-top:8px">🍷 ${escHtml(recipe.wine_pairing)}</div>`:``}
 
       ${(recipe.leftover_ideas||[]).length?`
         <button class="card-expand-btn" data-expand="leftovers"><span>🥡 Leftover ideas</span><em class="chev">▾</em></button>

@@ -127,78 +127,103 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 @keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .recipe-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
 
-.card-header{padding:16px 16px 12px;border-bottom:1px solid var(--border)}
-.card-header-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:4px}
-.card-name{font-size:17px;font-weight:700;line-height:1.3;flex:1}
-.card-actions{display:flex;gap:4px;flex-shrink:0}
-.card-btn{background:none;border:none;font-size:17px;cursor:pointer;padding:2px;opacity:.45;transition:opacity .2s,transform .15s}
-.card-btn:hover{opacity:1;transform:scale(1.2)}
-.card-btn.saved{opacity:1}
-.card-description{font-size:13px;color:var(--text-muted);line-height:1.5}
-.skill-plain{font-size:12px;color:var(--text-muted);font-style:italic;margin-top:2px}
+/* ── Recipe Cards (modern redesign) ── */
+.recipe-card{background:var(--surface);border-radius:20px;border:none;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.07),0 0 0 1px rgba(0,0,0,.05);transition:box-shadow .25s,transform .25s;animation:cardIn .35s ease both}
+@keyframes cardIn{from{opacity:0;transform:translateY(20px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.recipe-card:hover{box-shadow:0 12px 40px rgba(0,0,0,.13),0 0 0 1px rgba(0,0,0,.05);transform:translateY(-4px)}
 
-.card-meta{padding:10px 16px;display:flex;gap:6px;border-bottom:1px solid var(--border);flex-wrap:wrap}
-.meta-badge{display:inline-flex;align-items:center;gap:3px;border-radius:var(--radius-pill);padding:3px 9px;font-size:11px;font-weight:600;background:var(--bg);border:1px solid var(--border)}
-.skill-badge{color:#fff;border-color:transparent}
+/* Colored card hero */
+.card-hero{padding:22px 20px 18px;position:relative;overflow:hidden;min-height:130px;display:flex;flex-direction:column;justify-content:flex-end}
+.card-hero::before{content:'';position:absolute;inset:0;background:inherit;opacity:.92}
+.card-hero-emoji{position:absolute;right:16px;top:12px;font-size:52px;opacity:.35;line-height:1;transform:rotate(10deg);z-index:0}
+.card-hero-content{position:relative;z-index:1}
+.card-name{font-size:19px;font-weight:800;line-height:1.25;color:#fff;letter-spacing:-.3px;margin-bottom:4px;text-shadow:0 1px 4px rgba(0,0,0,.2)}
+.card-description{font-size:13px;color:rgba(255,255,255,.8);line-height:1.45}
+.skill-plain{font-size:11px;color:rgba(255,255,255,.65);font-style:italic;margin-top:3px}
+.card-actions{position:absolute;top:12px;left:16px;display:flex;gap:6px;z-index:2}
+.card-btn{background:rgba(0,0,0,.25);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:var(--radius-pill);padding:4px 10px;font-size:14px;cursor:pointer;transition:background .15s;display:flex;align-items:center;gap:3px}
+.card-btn:hover{background:rgba(0,0,0,.4)}
+.card-btn.saved{background:rgba(255,50,50,.4)}
+.cooked-badge{background:rgba(0,180,100,.4);color:#fff;border-radius:var(--radius-pill);padding:3px 10px;font-size:11px;font-weight:700}
+
+/* Card stat bar */
+.card-stats{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border)}
+.card-stat{padding:10px 8px;text-align:center;border-right:1px solid var(--border)}
+.card-stat:last-child{border-right:none}
+.card-stat-val{font-size:14px;font-weight:800;color:var(--text);line-height:1}
+.card-stat-key{font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-top:3px}
+
+/* Cost bar */
+.card-cost-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:linear-gradient(135deg,rgba(255,107,53,.06),rgba(247,147,30,.06));border-bottom:1px solid var(--border)}
+.card-cost-total{font-size:22px;font-weight:900;color:var(--accent)}
+.card-cost-detail{text-align:right}
+.card-cost-per{font-size:13px;font-weight:700;color:var(--text-muted)}
+.card-cost-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px}
+
+/* Badges row */
+.card-badges{display:flex;gap:6px;padding:12px 18px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.badge{display:inline-flex;align-items:center;gap:3px;border-radius:var(--radius-pill);padding:4px 10px;font-size:11px;font-weight:600}
+.badge-skill{color:#fff;border-color:transparent}
 .skill-1{background:var(--skill-1)}.skill-2{background:var(--skill-2)}.skill-3{background:var(--skill-3)}.skill-4{background:var(--skill-4)}.skill-5{background:var(--skill-5)}
+.badge-light{background:var(--bg);border:1px solid var(--border);color:var(--text-muted)}
+.allergen-badge{background:#fef3c7;color:#92400e;border:1px solid #fde68a;border-radius:var(--radius-pill);padding:3px 9px;font-size:11px;font-weight:600}
 
-.card-body{padding:12px 16px}
-.ingredient-section{margin-bottom:10px}
+/* Card body */
+.card-body{padding:14px 18px}
+.ingredient-section{margin-bottom:12px}
+.section-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:7px}
 .ingredient-tags{display:flex;flex-wrap:wrap;gap:5px}
-.ing-tag{display:inline-flex;align-items:center;gap:3px;border-radius:var(--radius-pill);padding:3px 9px;font-size:12px;font-weight:500}
-.ing-tag.have{background:var(--accent-light);color:#c94b00}
+.ing-tag{display:inline-flex;align-items:center;gap:3px;border-radius:var(--radius-pill);padding:4px 10px;font-size:12px;font-weight:500}
+.ing-tag.have{background:rgba(255,107,53,.12);color:#c94b00}
 .ing-tag.need{background:#f0ece4;color:#5c5248}
 .ing-tag.equipment{background:#eef2ff;color:#3730a3}
 .ing-tag.in-list{background:#d1fae5;color:#065f46}
 .ing-tag.clickable{cursor:pointer;transition:opacity .15s}.ing-tag.clickable:hover{opacity:.75}
 .add-grocery{background:none;border:none;cursor:pointer;font-size:12px;opacity:.5;padding:0;transition:opacity .15s}
 .add-grocery:hover{opacity:1}
-.allergen-badge{background:#fef3c7;color:#92400e;border:1px solid #fde68a;border-radius:var(--radius-pill);padding:2px 8px;font-size:11px;font-weight:600}
 
-/* Card expandable sections */
-.card-expand-btn{width:100%;background:none;border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:all .2s;margin-bottom:6px}
-.card-expand-btn:hover,.card-expand-btn.open{background:var(--bg);color:var(--text)}
+/* Expandable sections */
+.card-expand-btn{width:100%;background:var(--bg);border:none;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:all .2s;margin-bottom:6px}
+.card-expand-btn:hover,.card-expand-btn.open{background:linear-gradient(135deg,rgba(255,107,53,.1),rgba(247,147,30,.08));color:var(--text)}
 .card-expand-btn .chev{transition:transform .2s;font-style:normal}
 .card-expand-btn.open .chev{transform:rotate(180deg)}
-.card-expand-content{display:none;padding:8px 0 4px}.card-expand-content.visible{display:block}
+.card-expand-content{display:none;padding:4px 0 8px}.card-expand-content.visible{display:block}
 
-.steps-list{list-style:none;display:flex;flex-direction:column;gap:8px}
-.step-item{display:flex;gap:10px;font-size:13px;line-height:1.55}
-.step-num{flex-shrink:0;width:20px;height:20px;background:var(--accent);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin-top:2px}
+.steps-list{list-style:none;display:flex;flex-direction:column;gap:10px}
+.step-item{display:flex;gap:12px;font-size:13px;line-height:1.6}
+.step-num{flex-shrink:0;width:22px;height:22px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;margin-top:2px}
 
 .nutrition-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center}
-.nutrition-item{background:var(--bg);border-radius:var(--radius-sm);padding:8px 4px}
-.nutrition-val{font-size:16px;font-weight:800}
-.nutrition-key{font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase}
+.nutrition-item{background:var(--bg);border-radius:10px;padding:10px 4px}
+.nutrition-val{font-size:17px;font-weight:900;color:var(--text)}
+.nutrition-key{font-size:9px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-top:3px}
 
-/* Card action bar */
-.card-action-bar{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
-.card-action{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-pill);padding:5px 12px;font-size:12px;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all .15s}
-.card-action:hover{border-color:var(--accent);color:var(--accent)}
+/* Action bar */
+.card-action-bar{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.card-action{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-pill);padding:6px 13px;font-size:12px;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all .15s}
+.card-action:hover{border-color:var(--accent);color:var(--accent);background:rgba(255,107,53,.06)}
 
 /* Swap */
 .swap-form{display:flex;gap:6px;margin-top:8px}
-.swap-input{flex:1;border:2px solid var(--accent);border-radius:var(--radius-pill);padding:6px 12px;font-size:13px;outline:none;background:var(--surface);color:var(--text)}
-.swap-btn{background:var(--accent);color:#fff;border:none;border-radius:var(--radius-pill);padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer}
+.swap-input{flex:1;border:2px solid var(--accent);border-radius:var(--radius-pill);padding:7px 13px;font-size:13px;outline:none;background:var(--surface);color:var(--text)}
+.swap-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:var(--radius-pill);padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer}
 
 /* Rating */
-.card-rating{display:flex;gap:2px;margin-top:6px}
-.star-btn{background:none;border:none;font-size:18px;cursor:pointer;opacity:.35;transition:opacity .15s,transform .15s}
+.card-rating{display:flex;gap:3px;margin-top:8px}
+.star-btn{background:none;border:none;font-size:20px;cursor:pointer;opacity:.25;transition:opacity .15s,transform .15s}
 .star-btn.filled{opacity:1}
-.star-btn:hover{transform:scale(1.2);opacity:.8}
+.star-btn:hover{transform:scale(1.25);opacity:.7}
 
 /* Notes */
-.card-notes{width:100%;border:2px solid var(--border);border-radius:var(--radius-sm);padding:8px 10px;font-size:13px;background:var(--surface);color:var(--text);outline:none;resize:vertical;min-height:60px;margin-top:6px;font-family:inherit}
-.card-notes:focus{border-color:var(--accent)}
-
-/* Cooked badge */
-.cooked-badge{background:#d1fae5;color:#065f46;border-radius:var(--radius-pill);padding:3px 10px;font-size:11px;font-weight:700}
+.card-notes{width:100%;border:2px solid var(--border);border-radius:10px;padding:9px 12px;font-size:13px;background:var(--bg);color:var(--text);outline:none;resize:vertical;min-height:60px;margin-top:8px;font-family:inherit;transition:border-color .2s}
+.card-notes:focus{border-color:var(--accent);background:var(--surface)}
 
 /* Scale */
 .scale-row{display:flex;align-items:center;gap:8px;margin-top:8px}
 .scale-label{font-size:13px;color:var(--text-muted)}
-.scale-btn{background:none;border:2px solid var(--border);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center}
-.scale-val{font-size:16px;font-weight:800;min-width:28px;text-align:center}
+.scale-btn{background:var(--bg);border:2px solid var(--border);border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.scale-btn:hover{border-color:var(--accent);color:var(--accent)}
+.scale-val{font-size:16px;font-weight:800;min-width:30px;text-align:center}
 
 /* History */
 .history-list{display:flex;flex-direction:column;gap:10px}
