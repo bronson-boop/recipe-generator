@@ -50,16 +50,14 @@ function showPage(id) {
 function updateDashboard() {
   // Greeting
   const hour = new Date().getHours();
-  const name = profile.name ? `, ${profile.name}` : '';
-  const greetText = hour < 5 ? `Working late?${name} 🌙`
-    : hour < 12 ? `Good morning${name} 👋`
-    : hour < 17 ? `Good afternoon${name} ☀️`
-    : `Good evening${name} 🌆`;
+  const greetText = hour < 5 ? `Working late? 🌙`
+    : hour < 12 ? `Good morning 👋`
+    : hour < 17 ? `Good afternoon ☀️`
+    : `Good evening 🌆`;
   const helloEl = document.getElementById('dashHello');
   if (helloEl) helloEl.textContent = greetText;
 
   // Stats
-  document.getElementById('streakCount').textContent = streakData.count;
   document.getElementById('dashSavedCount').textContent = savedRecipes.length;
   document.getElementById('dashGroceryCount').textContent = groceryList.filter(g=>!g.checked).length;
   document.getElementById('dashCookedCount').textContent = cookedLog.length;
@@ -127,51 +125,16 @@ document.getElementById('dashSavedStat').addEventListener('click', showSaved);
 document.getElementById('dashGroceryStat').addEventListener('click', openGrocery);
 document.getElementById('dashCookedStat').addEventListener('click', showHistory);
 
-// ── Dark mode ──
-function applyTheme(dark) {
-  document.documentElement.setAttribute('data-theme', dark?'dark':'light');
-  document.getElementById('darkToggle').textContent = dark?'☀️':'🌙';
-  localStorage.setItem('darkMode', dark?'1':'0');
-}
-applyTheme(localStorage.getItem('darkMode')==='1');
-document.getElementById('darkToggle').addEventListener('click', ()=> applyTheme(document.documentElement.getAttribute('data-theme')!=='dark'));
+// ── Always dark mode ──
+document.documentElement.setAttribute('data-theme','dark');
 
-// ── Streak ──
-function updateStreak() {
-  const today = new Date().toDateString();
-  document.getElementById('streakCount').textContent = streakData.count;
-}
+// ── Cooked log ──
 function markCooked(recipe) {
   const today = new Date().toDateString();
-  const yesterday = new Date(Date.now()-86400000).toDateString();
-  if (streakData.lastDate===today) {/* already counted */}
-  else if (streakData.lastDate===yesterday) { streakData.count++; streakData.lastDate=today; }
-  else { streakData.count=1; streakData.lastDate=today; }
-  localStorage.setItem('streakData', JSON.stringify(streakData));
   cookedLog.unshift({name:recipe.name, date:today});
   localStorage.setItem('cookedLog', JSON.stringify(cookedLog));
-  updateStreak();
 }
-updateStreak();
 
-// ── Trending tags ──
-function buildTrending() {
-  const seasonal = SEASONAL[season]||[];
-  const tags = [...seasonal.slice(0,2), ...TRENDING.slice(0,8)];
-  const el = document.getElementById('trendingTags');
-  if (!el) return;
-  el.innerHTML = tags.map(t=>`<button class="trending-tag">${t}</button>`).join('');
-  el.querySelectorAll('.trending-tag').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      if (!manualIngredients.includes(btn.textContent)) manualIngredients.push(btn.textContent);
-      buildFiltersPanel('manualFilters');
-      buildQuickAdd();
-      showPage('pageManual');
-      renderManualTags(); updateManualBtn();
-    });
-  });
-}
-buildTrending();
 
 // ── Filters builder ──
 function buildFiltersPanel(id) {
@@ -256,14 +219,12 @@ document.getElementById('landingGroceryBtn').addEventListener('click',openGrocer
 document.getElementById('historyBtn').addEventListener('click',showHistory);
 document.getElementById('plannerBtn').addEventListener('click',showPlanner);
 document.getElementById('fridgeBtn').addEventListener('click',()=>showPage('pageFridge'));
-document.getElementById('streakBtn').addEventListener('click',()=>alert(`🔥 ${streakData.count}-day cooking streak!\nKeep it up!`));
 document.getElementById('rotdBtn').addEventListener('click',openRotd);
 document.getElementById('cookAgainBtn').addEventListener('click',()=>{
   if (!lastIngredients.length) return alert('No previous search found!');
   currentIngredients = lastIngredients;
   generateRecipes(lastIngredients);
 });
-document.getElementById('profileBtn').addEventListener('click',openProfile);
 
 // ── Photo flow ──
 document.getElementById('photoInput').addEventListener('change', async e=>{

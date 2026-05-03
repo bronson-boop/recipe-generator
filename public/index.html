@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
@@ -20,18 +20,11 @@
           <div class="dash-app-name">What Can I Cook?</div>
         </div>
         <div class="dash-topbar">
-          <button class="dash-topbar-btn" id="rotdBtn" title="Recipe of the day">⭐</button>
-          <button class="dash-topbar-btn" id="darkToggle" title="Dark mode">🌙</button>
-          <button class="dash-topbar-btn" id="profileBtn" title="Profile">👤</button>
+          <button class="dash-topbar-btn" id="rotdBtn" title="Recipe of the day">⭐ Today</button>
         </div>
       </div>
       <!-- Stats strip -->
       <div class="dash-stats-strip">
-        <div class="dash-stat-pill" id="streakBtn">
-          <span class="dsp-icon">🔥</span>
-          <span class="dsp-val" id="streakCount">0</span>
-          <span class="dsp-label">Streak</span>
-        </div>
         <div class="dash-stat-pill" id="dashSavedStat">
           <span class="dsp-icon">❤️</span>
           <span class="dsp-val" id="dashSavedCount">0</span>
@@ -86,12 +79,6 @@
     <div class="dash-section">
       <div class="dash-section-hd">Recent <button class="dash-section-link" id="historyBtn">See all</button></div>
       <div id="dashRecentContent"></div>
-    </div>
-
-    <!-- Trending -->
-    <div class="dash-section">
-      <div class="dash-section-hd">Trending now 🌶</div>
-      <div id="trendingTags" class="dash-trending-tags"></div>
     </div>
 
     <!-- More features -->
