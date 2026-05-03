@@ -1,160 +1,298 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>What Can I Cook?</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
-  <!-- LANDING PAGE -->
-  <div id="pageLanding" class="page active">
-    <div class="hero">
-      <div class="hero-top">
-        <div class="logo">🍳</div>
-        <h1>What Can I Cook?</h1>
-        <p class="subtitle">Tell us what's in your fridge.<br>We'll make it delicious. ✨</p>
-      </div>
-      <div class="option-cards">
-        <button class="option-card snap" id="photoBtn">
-          <span class="option-icon">📸</span>
-          <div class="option-text">
-            <span class="option-title">Snap a photo</span>
-            <span class="option-desc">Take a pic of your fridge or ingredients</span>
-          </div>
-          <span class="option-arrow">→</span>
-        </button>
-        <button class="option-card type" id="manualBtn">
-          <span class="option-icon">✏️</span>
-          <div class="option-text">
-            <span class="option-title">Type them in</span>
-            <span class="option-desc">List out what you have on hand</span>
-          </div>
-          <span class="option-arrow">→</span>
-        </button>
-        <button class="option-card surprise" id="surpriseBtn">
-          <span class="option-icon">🎲</span>
-          <div class="option-text">
-            <span class="option-title">Surprise me</span>
-            <span class="option-desc">Random recipes from a typical fridge</span>
-          </div>
-          <span class="option-arrow">→</span>
-        </button>
-      </div>
-      <div class="saved-bar">
-        <button class="saved-bar-btn" id="landingSavedBtn">❤️ Saved recipes</button>
-        <button class="saved-bar-btn" id="landingGroceryBtn">🛒 Grocery list</button>
-      </div>
+<!-- LANDING -->
+<div id="pageLanding" class="page active">
+  <div class="hero">
+    <div class="hero-topbar">
+      <button class="topbar-btn" id="streakBtn" title="Cooking streak">🔥 <span id="streakCount">0</span></button>
+      <button class="topbar-btn" id="rotdBtn" title="Recipe of the day">⭐ Today</button>
+      <button class="topbar-btn" id="darkToggle" title="Dark mode">🌙</button>
+      <button class="topbar-btn" id="profileBtn" title="Profile">👤</button>
     </div>
-    <input type="file" id="photoInput" accept="image/*" capture="environment" hidden />
-  </div>
-
-  <!-- PHOTO PREVIEW PAGE -->
-  <div id="pagePhoto" class="page" hidden>
-    <div class="page-inner">
-      <button class="btn-back" id="backFromPhoto">← Back</button>
-      <h2>Your photo</h2>
-      <div class="photo-preview-wrap">
-        <img id="photoPreview" src="" alt="Your ingredients" />
-        <div id="identifyStatus" class="identify-status">
-          <div class="spinner small"></div> Identifying ingredients…
-        </div>
-      </div>
-      <div id="photoIngredientArea" hidden>
-        <p class="section-label">Ingredients found — remove any that are wrong:</p>
-        <div class="tag-input-wrapper" id="photoTagWrapper">
-          <div class="tags" id="photoTagList"></div>
-          <input type="text" id="photoIngredientInput" placeholder="Add more…" autocomplete="off" />
-        </div>
-        <div class="filters-panel" id="photoFilters"></div>
-        <button class="btn-generate" id="photoGenerateBtn">Find Recipes →</button>
-      </div>
+    <div class="hero-top">
+      <div class="logo">🍳</div>
+      <h1>What Can I Cook?</h1>
+      <p class="subtitle">Tell us what's in your fridge.<br>We'll make it delicious. ✨</p>
+    </div>
+    <div class="option-cards">
+      <button class="option-card snap" id="photoBtn">
+        <span class="option-icon">📸</span>
+        <div class="option-text"><span class="option-title">Snap a photo</span><span class="option-desc">Take a pic of your fridge</span></div>
+        <span class="option-arrow">→</span>
+      </button>
+      <button class="option-card type" id="manualBtn">
+        <span class="option-icon">✏️</span>
+        <div class="option-text"><span class="option-title">Type them in</span><span class="option-desc">List what you have</span></div>
+        <span class="option-arrow">→</span>
+      </button>
+      <button class="option-card surprise" id="surpriseBtn">
+        <span class="option-icon">🎲</span>
+        <div class="option-text"><span class="option-title">Surprise me</span><span class="option-desc">Random fridge recipes</span></div>
+        <span class="option-arrow">→</span>
+      </button>
+    </div>
+    <div class="landing-secondary">
+      <button class="saved-bar-btn" id="cookAgainBtn">🔄 Cook again</button>
+      <button class="saved-bar-btn" id="historyBtn">🕐 History</button>
+      <button class="saved-bar-btn" id="landingSavedBtn">❤️ Saved</button>
+      <button class="saved-bar-btn" id="landingGroceryBtn">🛒 Groceries</button>
+      <button class="saved-bar-btn" id="plannerBtn">📅 Meal Plan</button>
+      <button class="saved-bar-btn" id="fridgeBtn">🧊 Fridge</button>
+    </div>
+    <div class="trending-bar">
+      <span class="trending-label">Trending:</span>
+      <div id="trendingTags" class="trending-tags"></div>
     </div>
   </div>
+  <input type="file" id="photoInput" accept="image/*" capture="environment" hidden/>
+</div>
 
-  <!-- MANUAL INPUT PAGE -->
-  <div id="pageManual" class="page" hidden>
-    <div class="page-inner">
+<!-- PHOTO PAGE -->
+<div id="pagePhoto" class="page" hidden>
+  <div class="page-inner">
+    <button class="btn-back" id="backFromPhoto">← Back</button>
+    <h2>Your photo</h2>
+    <div class="photo-preview-wrap">
+      <img id="photoPreview" src="" alt=""/>
+      <div id="identifyStatus" class="identify-status"><div class="spinner small"></div> Identifying…</div>
+    </div>
+    <div id="photoIngredientArea" hidden>
+      <p class="section-label">Ingredients found — edit as needed:</p>
+      <div class="tag-input-wrapper" id="photoTagWrapper">
+        <div class="tags" id="photoTagList"></div>
+        <input type="text" id="photoIngredientInput" placeholder="Add more…" autocomplete="off"/>
+      </div>
+      <div class="filters-panel" id="photoFilters"></div>
+      <button class="btn-generate" id="photoGenerateBtn">Find Recipes →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MANUAL PAGE -->
+<div id="pageManual" class="page" hidden>
+  <div class="page-inner">
+    <div class="page-header-row">
       <button class="btn-back" id="backFromManual">← Back</button>
-      <h2>What do you have?</h2>
-      <p class="hint">Type an ingredient and press Enter or comma to add it.</p>
-      <div class="tag-input-wrapper" id="manualTagWrapper">
-        <div class="tags" id="manualTagList"></div>
-        <input type="text" id="manualIngredientInput" placeholder="e.g. chicken, garlic, lemon…" autocomplete="off" />
+      <button class="btn-voice" id="voiceBtn" title="Voice input">🎤</button>
+    </div>
+    <h2>What do you have?</h2>
+    <p class="hint">Type an ingredient and press Enter or comma.</p>
+    <div class="tag-input-wrapper" id="manualTagWrapper">
+      <div class="tags" id="manualTagList"></div>
+      <input type="text" id="manualIngredientInput" placeholder="e.g. chicken, garlic, lemon…" autocomplete="off"/>
+    </div>
+    <div class="filters-panel" id="manualFilters"></div>
+    <button class="btn-generate" id="manualGenerateBtn" disabled>Find Recipes →</button>
+  </div>
+</div>
+
+<!-- RESULTS PAGE -->
+<div id="pageResults" class="page" hidden>
+  <div class="results-section">
+    <div class="results-header">
+      <div>
+        <h2 id="resultsTitle">Recipes for you</h2>
+        <div class="results-meta" id="resultsMeta"></div>
       </div>
-      <div class="filters-panel" id="manualFilters"></div>
-      <button class="btn-generate" id="manualGenerateBtn" disabled>Find Recipes →</button>
+      <div class="results-actions">
+        <button class="btn-icon-pill" id="luckyBtn">🎰 Lucky</button>
+        <button class="btn-icon-pill" id="groceryBtn">🛒 Groceries</button>
+        <button class="btn-icon-pill" id="savedBtn">❤️ Saved</button>
+        <button class="btn-icon-pill" id="printBtn">🖨 Print</button>
+        <button class="btn-reset" id="resetBtn">← Back</button>
+      </div>
+    </div>
+    <div class="results-toolbar">
+      <input type="text" id="searchBar" placeholder="🔍 Search recipes…" class="search-bar"/>
+      <select id="sortSelect" class="toolbar-select">
+        <option value="">Sort by…</option>
+        <option value="time">Quickest first</option>
+        <option value="skill">Easiest first</option>
+        <option value="calories">Lowest calories</option>
+        <option value="cost">Cheapest first</option>
+      </select>
+    </div>
+    <div class="recipe-grid" id="recipeGrid"></div>
+  </div>
+</div>
+
+<!-- SAVED PAGE -->
+<div id="pageSaved" class="page" hidden>
+  <div class="results-section">
+    <div class="results-header">
+      <h2>❤️ Saved Recipes</h2>
+      <button class="btn-reset" id="backFromSaved">← Back</button>
+    </div>
+    <div class="recipe-grid" id="savedGrid"></div>
+    <p id="savedEmpty" class="empty-msg" hidden>No saved recipes yet — hit ❤️ on any card!</p>
+  </div>
+</div>
+
+<!-- HISTORY PAGE -->
+<div id="pageHistory" class="page" hidden>
+  <div class="page-inner">
+    <button class="btn-back" id="backFromHistory">← Back</button>
+    <h2>🕐 Recent History</h2>
+    <div id="historyList" class="history-list"></div>
+    <p id="historyEmpty" class="empty-msg" hidden>No history yet.</p>
+  </div>
+</div>
+
+<!-- MEAL PLANNER PAGE -->
+<div id="pagePlanner" class="page" hidden>
+  <div class="results-section">
+    <div class="results-header">
+      <h2>📅 Meal Planner</h2>
+      <button class="btn-reset" id="backFromPlanner">← Back</button>
+    </div>
+    <div class="planner-grid" id="plannerGrid"></div>
+    <button class="btn-generate" id="autoPlanBtn" style="max-width:300px;margin:24px auto 0;display:block">✨ Auto-fill plan</button>
+  </div>
+</div>
+
+<!-- FRIDGE TRACKER PAGE -->
+<div id="pageFridge" class="page" hidden>
+  <div class="page-inner">
+    <button class="btn-back" id="backFromFridge">← Back</button>
+    <h2>🧊 Fridge Tracker</h2>
+    <p class="hint">Track what's in your fridge and when it expires.</p>
+    <div class="fridge-add-row">
+      <input type="text" id="fridgeItem" placeholder="Ingredient name…" class="fridge-input"/>
+      <input type="date" id="fridgeExpiry" class="fridge-input" style="max-width:150px"/>
+      <button class="btn-add-fridge" id="addFridgeBtn">Add</button>
+    </div>
+    <div id="fridgeList" class="fridge-list"></div>
+    <button class="btn-generate" id="cookFridgeBtn" style="margin-top:20px">🍳 Cook from fridge</button>
+  </div>
+</div>
+
+<!-- COOK MODE PAGE -->
+<div id="pageCook" class="cook-mode" hidden>
+  <div class="cook-header">
+    <button class="btn-back-cook" id="backFromCook">✕</button>
+    <span id="cookTitle" class="cook-title"></span>
+    <span id="cookStepCounter" class="cook-step-counter"></span>
+  </div>
+  <div class="cook-body">
+    <div class="cook-step-text" id="cookStepText"></div>
+    <div class="cook-timer-area">
+      <div class="cook-timer" id="cookTimer">0:00</div>
+      <div class="cook-timer-btns">
+        <button class="timer-btn" id="timerStart">▶ Start</button>
+        <button class="timer-btn" id="timerReset">↺ Reset</button>
+        <input type="number" id="timerMinutes" class="timer-input" placeholder="min" min="1" max="120"/>
+      </div>
     </div>
   </div>
+  <div class="cook-footer">
+    <div class="cook-ingredients" id="cookIngredients"></div>
+    <div class="cook-nav">
+      <button class="cook-nav-btn" id="prevStep">← Prev</button>
+      <button class="cook-nav-btn primary" id="nextStep">Next →</button>
+    </div>
+  </div>
+</div>
 
-  <!-- RESULTS PAGE -->
-  <div id="pageResults" class="page" hidden>
-    <div class="results-section">
-      <div class="results-header">
-        <h2 id="resultsTitle">Recipes for you</h2>
-        <div class="results-actions">
-          <button class="btn-icon-pill" id="groceryBtn">🛒 Grocery list</button>
-          <button class="btn-icon-pill" id="savedBtn">❤️ Saved</button>
-          <button class="btn-reset" id="resetBtn">← Back</button>
+<!-- GROCERY MODAL -->
+<div class="modal-overlay" id="groceryModal" hidden>
+  <div class="modal">
+    <div class="modal-header"><h3>🛒 Grocery List</h3><button class="modal-close" id="groceryClose">×</button></div>
+    <div id="groceryItems" class="grocery-items"></div>
+    <p id="groceryEmpty" class="empty-msg" hidden>No items yet. Hit + on "Also needed" ingredients.</p>
+    <div class="modal-footer">
+      <button class="btn-copy" id="groceryCopy">📋 Copy</button>
+      <button class="btn-copy" id="groceryWhatsapp" style="background:#25d366">💬 WhatsApp</button>
+      <button class="btn-clear" id="groceryClear">Clear</button>
+    </div>
+  </div>
+</div>
+
+<!-- SHARE MODAL -->
+<div class="modal-overlay" id="shareModal" hidden>
+  <div class="modal">
+    <div class="modal-header"><h3>📤 Share Recipe</h3><button class="modal-close" id="shareClose">×</button></div>
+    <p class="share-label">Copy link or share directly:</p>
+    <div class="share-url-wrap">
+      <input type="text" id="shareUrl" readonly/>
+      <button class="btn-copy" id="shareCopy">Copy</button>
+    </div>
+    <div class="share-btns">
+      <button class="share-social whatsapp" id="shareWhatsapp">💬 WhatsApp</button>
+      <button class="share-social email" id="shareEmail">✉️ Email</button>
+      <button class="share-social insta" id="shareInsta">📸 Save Image</button>
+    </div>
+  </div>
+</div>
+
+<!-- UNIT CONVERTER MODAL -->
+<div class="modal-overlay" id="unitModal" hidden>
+  <div class="modal">
+    <div class="modal-header"><h3>⚖️ Unit Converter</h3><button class="modal-close" id="unitClose">×</button></div>
+    <div class="unit-converter">
+      <input type="number" id="unitInput" placeholder="Amount" class="unit-input"/>
+      <select id="unitFrom" class="unit-select"></select>
+      <span>→</span>
+      <select id="unitTo" class="unit-select"></select>
+      <div class="unit-result" id="unitResult">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="profileModal" hidden>
+  <div class="modal">
+    <div class="modal-header"><h3>👤 My Profile</h3><button class="modal-close" id="profileClose">×</button></div>
+    <div class="profile-body">
+      <div class="profile-row"><label>Your name</label><input type="text" id="profileName" placeholder="Chef…" class="profile-input"/></div>
+      <div class="profile-row"><label>Default skill level</label>
+        <div class="filter-pills" id="profileSkill">
+          ${['1 – Beginner','2 – Easy','3 – Medium','4 – Advanced','5 – Expert'].map((l,i)=>`<button class="filter-pill" data-skill="${i+1}">${l}</button>`).join('')}
         </div>
       </div>
-      <div class="recipe-grid" id="recipeGrid"></div>
-    </div>
-  </div>
-
-  <!-- SAVED RECIPES PAGE -->
-  <div id="pageSaved" class="page" hidden>
-    <div class="results-section">
-      <div class="results-header">
-        <h2>Saved Recipes</h2>
-        <button class="btn-reset" id="backFromSaved">← Back</button>
+      <div class="profile-row"><label>Saved dietary restrictions</label>
+        <div class="filter-pills" id="profileDietary">
+          ${['Vegetarian','Vegan','Gluten-Free','Dairy-Free'].map(d=>`<button class="filter-pill" data-d="${d}">${d}</button>`).join('')}
+        </div>
       </div>
-      <div class="recipe-grid" id="savedGrid"></div>
-      <p id="savedEmpty" class="empty-msg" hidden>No saved recipes yet. Hit ❤️ on any recipe to save it!</p>
-    </div>
-  </div>
-
-  <!-- GROCERY LIST MODAL -->
-  <div class="modal-overlay" id="groceryModal" hidden>
-    <div class="modal">
-      <div class="modal-header">
-        <h3>🛒 Grocery List</h3>
-        <button class="modal-close" id="groceryClose">×</button>
-      </div>
-      <div id="groceryItems" class="grocery-items"></div>
-      <p id="groceryEmpty" class="empty-msg" hidden>No items yet. Hit + on any "Also needed" ingredient.</p>
-      <div class="modal-footer">
-        <button class="btn-copy" id="groceryCopy">Copy list</button>
-        <button class="btn-clear" id="groceryClear">Clear all</button>
+      <div class="profile-row"><label>Preferred language</label>
+        <select id="profileLanguage" class="unit-select">
+          <option>English</option><option>Spanish</option><option>French</option><option>Italian</option><option>German</option><option>Japanese</option><option>Chinese</option><option>Portuguese</option><option>Arabic</option><option>Hindi</option>
+        </select>
       </div>
     </div>
+    <div class="modal-footer"><button class="btn-copy" id="profileSave">Save</button></div>
   </div>
+</div>
 
-  <!-- SHARE MODAL -->
-  <div class="modal-overlay" id="shareModal" hidden>
-    <div class="modal">
-      <div class="modal-header">
-        <h3>📤 Share Recipe</h3>
-        <button class="modal-close" id="shareClose">×</button>
-      </div>
-      <p class="share-label">Copy this link to share:</p>
-      <div class="share-url-wrap">
-        <input type="text" id="shareUrl" readonly />
-        <button class="btn-copy" id="shareCopy">Copy</button>
-      </div>
-    </div>
+<!-- RECIPE OF THE DAY MODAL -->
+<div class="modal-overlay" id="rotdModal" hidden>
+  <div class="modal">
+    <div class="modal-header"><h3>⭐ Recipe of the Day</h3><button class="modal-close" id="rotdClose">×</button></div>
+    <div id="rotdContent" style="padding:20px"></div>
+    <div class="modal-footer"><button class="btn-copy" id="rotdGenerate">Generate today's recipe</button></div>
   </div>
+</div>
 
-  <!-- LOADING OVERLAY -->
-  <div class="loading-overlay" id="loadingOverlay" hidden>
-    <div class="loading-card">
-      <div class="spinner"></div>
-      <p id="loadingMsg">Finding your recipes…</p>
-      <button class="btn-cancel" id="loadingCancel">Cancel</button>
-    </div>
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay" hidden>
+  <div class="loading-card">
+    <div class="spinner"></div>
+    <p id="loadingMsg">Finding your recipes…</p>
+    <button class="btn-cancel" id="loadingCancel">Cancel</button>
   </div>
+</div>
 
-  <script src="app.js"></script>
+<!-- CANVAS for Instagram share (hidden) -->
+<canvas id="shareCanvas" hidden></canvas>
+
+<script src="app.js"></script>
 </body>
 </html>
