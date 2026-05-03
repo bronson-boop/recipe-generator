@@ -1,10 +1,10 @@
 {
   "functions": {
-    "api/recipes.py": {
-      "maxDuration": 60
-    }
+    "api/recipes.py": { "maxDuration": 60 },
+    "api/identify.py": { "maxDuration": 30 }
   },
   "rewrites": [
-    { "source": "/api/recipes", "destination": "/api/recipes" }
+    { "source": "/api/recipes", "destination": "/api/recipes" },
+    { "source": "/api/identify", "destination": "/api/identify" }
   ]
 }

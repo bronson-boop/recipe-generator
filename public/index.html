@@ -8,44 +8,81 @@
 </head>
 <body>
 
-  <div class="hero">
-    <div class="hero-inner">
+  <!-- LANDING PAGE -->
+  <div id="pageLanding" class="page active">
+    <div class="hero">
       <div class="logo">🍳</div>
       <h1>What Can I Cook?</h1>
-      <p class="subtitle">Type in what you've got — get recipes that actually work.</p>
+      <p class="subtitle">Tell us what you've got — we'll find the recipes.</p>
 
-      <div class="input-area">
-        <div class="tag-input-wrapper" id="tagWrapper">
-          <div class="tags" id="tagList"></div>
-          <input
-            type="text"
-            id="ingredientInput"
-            placeholder="Type an ingredient, press Enter or comma…"
-            autocomplete="off"
-          />
-        </div>
-        <button id="generateBtn" class="btn-generate" disabled>
-          <span class="btn-text">Find Recipes</span>
-          <span class="btn-icon">→</span>
+      <div class="option-cards">
+        <button class="option-card" id="photoBtn">
+          <span class="option-icon">📷</span>
+          <span class="option-title">Snap a photo</span>
+          <span class="option-desc">Take a pic of your fridge or ingredients</span>
+        </button>
+        <button class="option-card" id="manualBtn">
+          <span class="option-icon">✍️</span>
+          <span class="option-title">Type them in</span>
+          <span class="option-desc">List out what you have on hand</span>
         </button>
       </div>
+    </div>
+    <input type="file" id="photoInput" accept="image/*" capture="environment" hidden />
+  </div>
 
-      <p class="hint">Try: chicken, garlic, lemon, spinach, pasta</p>
+  <!-- PHOTO PREVIEW PAGE -->
+  <div id="pagePhoto" class="page" hidden>
+    <div class="page-inner">
+      <button class="btn-back" id="backFromPhoto">← Back</button>
+      <h2>Your photo</h2>
+      <div class="photo-preview-wrap">
+        <img id="photoPreview" src="" alt="Your ingredients" />
+        <div id="identifyStatus" class="identify-status">
+          <div class="spinner small"></div> Identifying ingredients…
+        </div>
+      </div>
+      <div id="photoIngredientArea" hidden>
+        <p class="section-label">Ingredients found — remove any that are wrong, add anything missing:</p>
+        <div class="tag-input-wrapper" id="photoTagWrapper">
+          <div class="tags" id="photoTagList"></div>
+          <input type="text" id="photoIngredientInput" placeholder="Add more…" autocomplete="off" />
+        </div>
+        <button class="btn-generate" id="photoGenerateBtn">Find Recipes →</button>
+      </div>
     </div>
   </div>
 
-  <div class="results-section" id="resultsSection" hidden>
-    <div class="results-header">
-      <h2 id="resultsTitle">Recipes for you</h2>
-      <button class="btn-reset" id="resetBtn">← Start over</button>
+  <!-- MANUAL INPUT PAGE -->
+  <div id="pageManual" class="page" hidden>
+    <div class="page-inner">
+      <button class="btn-back" id="backFromManual">← Back</button>
+      <h2>What do you have?</h2>
+      <p class="hint">Type an ingredient and press Enter or comma to add it.</p>
+      <div class="tag-input-wrapper" id="manualTagWrapper">
+        <div class="tags" id="manualTagList"></div>
+        <input type="text" id="manualIngredientInput" placeholder="e.g. chicken, garlic, lemon…" autocomplete="off" />
+      </div>
+      <button class="btn-generate" id="manualGenerateBtn" disabled>Find Recipes →</button>
     </div>
-    <div class="recipe-grid" id="recipeGrid"></div>
   </div>
 
+  <!-- RESULTS PAGE -->
+  <div id="pageResults" class="page" hidden>
+    <div class="results-section">
+      <div class="results-header">
+        <h2 id="resultsTitle">Recipes for you</h2>
+        <button class="btn-reset" id="resetBtn">← Start over</button>
+      </div>
+      <div class="recipe-grid" id="recipeGrid"></div>
+    </div>
+  </div>
+
+  <!-- LOADING OVERLAY -->
   <div class="loading-overlay" id="loadingOverlay" hidden>
     <div class="loading-card">
       <div class="spinner"></div>
-      <p>Finding your recipes…</p>
+      <p id="loadingMsg">Finding your recipes…</p>
     </div>
   </div>
 
