@@ -931,7 +931,7 @@ document.addEventListener('keydown',e=>{
 });
 
 // ── Helpers ──
-async function fetchT(url,opts,ms=55000){const c=new AbortController();const id=setTimeout(()=>c.abort(),ms);try{return await fetch(url,{...opts,signal:c.signal})}finally{clearTimeout(id)}}
+async function fetchT(url,opts,ms=58000){const c=new AbortController();const id=setTimeout(()=>c.abort(),ms);try{return await fetch(url,{...opts,signal:c.signal})}finally{clearTimeout(id)}}
 function formatTime(mins){if(!mins) return '?';if(mins<60) return `${mins}m`;const h=Math.floor(mins/60),m=mins%60;return m?`${h}h${m}m`:`${h}h`}
 function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 

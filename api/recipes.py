@@ -15,7 +15,7 @@ class handler(BaseHTTPRequestHandler):
             servings     = body.get('servings', 2)
             max_time     = body.get('max_time', 0)
             max_skill    = body.get('max_skill', 5)
-            count        = body.get('count', 5)
+            count        = body.get('count', 4)
             cuisine      = body.get('cuisine', '')
             meal_type    = body.get('meal_type', '')
             budget_mode  = body.get('budget_mode', False)
@@ -56,24 +56,22 @@ class handler(BaseHTTPRequestHandler):
                 src = f'I have: {", ".join(ingredients)}. Use as many as possible. additional_ingredients = only things to buy.'
 
             schema = (
-                'Return JSON with a "recipes" array. Each recipe must have EXACTLY these fields:\n'
-                'name, description, skill_description (plain-English e.g. "No knife skills needed"),\n'
-                'cuisine, meal_type (breakfast/lunch/dinner/snack/dessert),\n'
-                'time_minutes (int), skill_level (int 1-5),\n'
-                'calories_per_serving (int),\n'
-                'nutrition: {protein_g, carbs_g, fat_g, fiber_g} (all ints),\n'
-                'estimated_cost ("$"/"$$"/"$$$"),\n'
-                'carbon_footprint ("Low"/"Medium"/"High"),\n'
-                'allergens (array from: nuts/gluten/dairy/eggs/fish/shellfish/soy),\n'
-                'wine_pairing (one sentence string),\n'
-                'leftover_ideas (array of 2 short strings),\n'
-                'ingredients_used, additional_ingredients, equipment, steps (all string arrays).'
+                'Return JSON with a "recipes" array. Each recipe must have EXACTLY these fields: '
+                'name (string), description (string), skill_description (string, plain English e.g. "Just stir and heat"), '
+                'cuisine (string), meal_type (breakfast/lunch/dinner/snack/dessert), '
+                'time_minutes (int), skill_level (int 1-5), calories_per_serving (int), '
+                'nutrition ({protein_g, carbs_g, fat_g, fiber_g} ints), '
+                'estimated_cost ("$"/"$$"/"$$$"), carbon_footprint ("Low"/"Medium"/"High"), '
+                'allergens (array: nuts/gluten/dairy/eggs/fish/shellfish/soy), '
+                'wine_pairing (one short sentence), leftover_ideas (array of 2 short strings), '
+                'ingredients_used (array), additional_ingredients (array), equipment (array), steps (array). '
+                'Keep steps concise — one sentence each.'
             )
 
             client = anthropic.Anthropic()
             resp = client.messages.create(
                 model='claude-sonnet-4-6',
-                max_tokens=8000,
+                max_tokens=6000,
                 system=f'You are a recipe generator. Respond with valid JSON only — no markdown, no fences.\n{schema}',
                 messages=[{'role':'user','content':(
                     f'{src}\n\nGenerate {count} diverse recipes.\n\n'
