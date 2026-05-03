@@ -5,7 +5,8 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 client = anthropic.Anthropic()
 
-@app.route("/api/recipes", methods=["POST"])
+@app.route('/', methods=['POST'])
+@app.route('/api/recipes', methods=['POST'])
 def generate_recipes():
     body = request.get_json(silent=True) or {}
     ingredients = body.get("ingredients", [])
@@ -15,8 +16,8 @@ def generate_recipes():
 
     try:
         response = client.messages.create(
-            model="claude-opus-4-7",
-            max_tokens=8192,
+            model="claude-sonnet-4-6",
+            max_tokens=4096,
             system=(
                 "You are a recipe generator. Always respond with valid JSON only — "
                 "no markdown, no explanation, no code fences. "
@@ -30,15 +31,15 @@ def generate_recipes():
                 "role": "user",
                 "content": (
                     f"I have these ingredients: {', '.join(ingredients)}.\n\n"
-                    "Generate 6 to 8 diverse recipes I can make across different meal types and cuisines.\n\n"
+                    "Generate 5 diverse recipes I can make across different meal types.\n\n"
                     "skill_level scale:\n"
-                    "  1 = Beginner, nearly impossible to mess up\n"
-                    "  2 = Easy, minimal technique\n"
-                    "  3 = Intermediate, some experience helpful\n"
-                    "  4 = Advanced, solid cooking knowledge needed\n"
-                    "  5 = Expert / professional level\n\n"
+                    "  1 = Beginner\n"
+                    "  2 = Easy\n"
+                    "  3 = Intermediate\n"
+                    "  4 = Advanced\n"
+                    "  5 = Expert\n\n"
                     "Use as many of my ingredients as possible. "
-                    "additional_ingredients should only list things I'd actually need to buy."
+                    "additional_ingredients should only list things I'd need to buy."
                 )
             }]
         )
