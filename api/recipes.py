@@ -44,7 +44,12 @@ class handler(BaseHTTPRequestHandler):
             if language != 'English': constraints.append(f'Write recipe names and steps in {language}')
 
             if surprise:
-                src = 'Generate recipes using ingredients commonly found in a typical home fridge and pantry.'
+                src = (
+                    'Generate recipes using only the most common household fridge and pantry staples that nearly everyone has: '
+                    'eggs, butter, milk, cheese, onions, garlic, pasta, rice, canned tomatoes, chicken, bread, potatoes, '
+                    'carrots, celery, olive oil, flour, sugar, salt, pepper, basic herbs and spices. '
+                    'Prioritise recipes that need NO shopping — use only what most people already own.'
+                )
             elif (healthier or cheaper) and recipe_name:
                 src = f'Regenerate "{recipe_name}" but {"much healthier" if healthier else "with cheaper ingredients"}. Same general concept.'
             else:

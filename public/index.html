@@ -146,6 +146,37 @@
   </div>
 </div>
 
+<!-- CHEF SHOW OVERLAY -->
+<div id="chefShow" class="chef-show" hidden>
+  <div class="chef-show-bg" id="chefShowBg"></div>
+  <div class="chef-show-inner">
+    <button class="chef-close" id="chefClose">✕</button>
+    <div class="chef-header">
+      <div class="chef-avatar" id="chefAvatar"></div>
+      <div>
+        <div class="chef-name" id="chefName"></div>
+        <div class="chef-recipe-name" id="chefRecipeName"></div>
+      </div>
+      <a class="chef-yt-btn" id="chefYT" target="_blank">▶ Watch on YouTube</a>
+    </div>
+    <div class="chef-stage">
+      <div class="chef-step-label" id="chefStepLabel">Introduction</div>
+      <div class="chef-narration" id="chefNarration"></div>
+      <div class="chef-tip" id="chefTip"></div>
+    </div>
+    <div class="chef-progress-bar"><div class="chef-progress-fill" id="chefProgressFill"></div></div>
+    <div class="chef-controls">
+      <button class="chef-ctrl-btn" id="chefPrev">← Prev</button>
+      <button class="chef-ctrl-btn" id="chefPlayPause">⏸ Pause</button>
+      <button class="chef-ctrl-btn primary" id="chefNext">Next →</button>
+    </div>
+    <div class="chef-footer">
+      <label class="chef-voice-toggle"><input type="checkbox" id="chefVoice" checked/> 🔊 Read aloud</label>
+      <span class="chef-step-dots" id="chefDots"></span>
+    </div>
+  </div>
+</div>
+
 <!-- MEAL PLANNER PAGE -->
 <div id="pagePlanner" class="page" hidden>
   <div class="results-section">

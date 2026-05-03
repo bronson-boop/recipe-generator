@@ -6,6 +6,7 @@ let manualIngredients = [], photoIngredients = [], currentIngredients = [];
 let currentRecipes = [], allRenderedRecipes = [];
 let cookRecipe = null, cookStep = 0, timerInterval = null, timerSeconds = 0, timerRunning = false;
 let scaleFactors = {};
+let chefScript = null, chefStep = 0, chefAutoPlay = null, chefSpeaking = false;
 
 const profile = JSON.parse(localStorage.getItem('profile') || '{"name":"","skill":3,"dietary":[],"language":"English"}');
 let savedRecipes  = JSON.parse(localStorage.getItem('savedRecipes')  || '[]');
@@ -317,7 +318,8 @@ function buildCard(recipe, ingLower, idx) {
         <div class="card-name">${escHtml(recipe.name)}</div>
         <div class="card-actions">
           ${cooked?`<span class="cooked-badge">✓ Cooked</span>`:''}
-          <button class="card-btn save-btn ${isSaved?'saved':''}" title="Save">  ${isSaved?'❤️':'🤍'}</button>
+          <button class="card-btn save-btn ${isSaved?'saved':''}" title="Save">${isSaved?'❤️':'🤍'}</button>
+          ${filters.chefStyle?`<button class="card-btn chef-show-btn" title="Chef show">🎬</button>`:''}
           <button class="card-btn cook-btn" title="Cook mode">👨‍🍳</button>
           <button class="card-btn share-btn" title="Share">📤</button>
         </div>
@@ -421,6 +423,12 @@ function buildCard(recipe, ingLower, idx) {
 
   // Cook mode
   card.querySelector('.cook-btn').addEventListener('click',()=>startCookMode(recipe));
+
+  // Chef show
+  const chefBtn = card.querySelector('.chef-show-btn');
+  if (chefBtn) {
+    chefBtn.addEventListener('click', () => startChefShow(recipe));
+  }
 
   // Share
   card.querySelector('.share-btn').addEventListener('click',()=>shareRecipe(recipe));
@@ -768,6 +776,144 @@ document.getElementById('unitInput').addEventListener('input',calcUnit);
 document.getElementById('unitFrom').addEventListener('change',calcUnit);
 document.getElementById('unitTo').addEventListener('change',calcUnit);
 document.getElementById('unitClose').addEventListener('click',()=>document.getElementById('unitModal').classList.remove('visible'));
+
+// ── Chef Show ──
+async function startChefShow(recipe) {
+  const chefStyle = filters.chefStyle || 'Gordon Ramsay';
+  setLoading(true, `Getting ${chefStyle} to narrate…`);
+  try {
+    const res = await fetchT('/api/chef_script', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ recipe, chef_style: chefStyle.toLowerCase() })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+    chefScript = data;
+    chefStep = -1; // -1 = intro
+    renderChefShow(recipe, chefStyle);
+  } catch(e) { alert(e.message); }
+  finally { setLoading(false); }
+}
+
+function renderChefShow(recipe, chefStyle) {
+  const show = document.getElementById('chefShow');
+  document.getElementById('chefShowBg').style.setProperty('--chef-color', chefScript.chef_color||'#c0392b');
+  document.getElementById('chefShowBg').style.background = chefScript.chef_color||'#c0392b';
+  document.getElementById('chefAvatar').textContent = chefScript.chef_emoji||'👨‍🍳';
+  document.getElementById('chefName').textContent = chefScript.chef_name||chefStyle;
+  document.getElementById('chefRecipeName').textContent = recipe.name;
+  document.getElementById('chefYT').href = `https://www.youtube.com/results?search_query=${encodeURIComponent(chefStyle+' '+recipe.name)}`;
+
+  const steps = chefScript.steps || [];
+  const total = steps.length + 2; // intro + steps + outro
+
+  // Build dots
+  document.getElementById('chefDots').innerHTML = Array.from({length:total},(_,i)=>`<span class="chef-dot" data-i="${i}"></span>`).join('');
+
+  show.hidden = false;
+  show.classList.add('active');
+  showChefStep(-1);
+
+  // Auto-play
+  clearInterval(chefAutoPlay);
+  chefAutoPlay = setInterval(() => {
+    const maxStep = steps.length; // last real step = outro
+    if (chefStep < maxStep) {
+      chefStep++;
+      showChefStep(chefStep);
+    } else {
+      clearInterval(chefAutoPlay);
+      chefAutoPlay = null;
+      document.getElementById('chefPlayPause').textContent = '▶ Replay';
+    }
+  }, 8000);
+
+  document.getElementById('chefPlayPause').textContent = '⏸ Pause';
+}
+
+function showChefStep(step) {
+  chefStep = step;
+  const steps = chefScript?.steps || [];
+  const total = steps.length + 2;
+  let label, narration, tip;
+
+  if (step === -1) {
+    label = 'Introduction';
+    narration = chefScript.intro || '';
+    tip = '';
+  } else if (step >= steps.length) {
+    label = 'That\'s a wrap!';
+    narration = chefScript.outro || 'And that\'s how it\'s done. Enjoy!';
+    tip = '';
+  } else {
+    label = `Step ${step + 1} of ${steps.length}`;
+    narration = steps[step].narration || '';
+    tip = steps[step].tip || '';
+  }
+
+  document.getElementById('chefStepLabel').textContent = label;
+  document.getElementById('chefNarration').textContent = narration;
+  document.getElementById('chefTip').textContent = tip ? `💡 ${tip}` : '';
+
+  // Progress
+  const pct = ((step + 1) / total) * 100;
+  document.getElementById('chefProgressFill').style.width = `${Math.max(0, pct)}%`;
+
+  // Dots
+  document.querySelectorAll('.chef-dot').forEach((d,i) => d.classList.toggle('active', i === step + 1));
+
+  // Buttons
+  document.getElementById('chefPrev').disabled = step <= -1;
+  document.getElementById('chefNext').disabled = step >= steps.length;
+
+  // Speak
+  if (document.getElementById('chefVoice')?.checked) speakText(narration + (tip ? '. ' + tip : ''));
+}
+
+function speakText(text) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.rate = 0.95; utt.pitch = 1.0;
+  window.speechSynthesis.speak(utt);
+}
+
+// Chef controls
+document.getElementById('chefClose').addEventListener('click', () => {
+  document.getElementById('chefShow').classList.remove('active');
+  document.getElementById('chefShow').hidden = true;
+  clearInterval(chefAutoPlay); chefAutoPlay = null;
+  window.speechSynthesis?.cancel();
+});
+
+document.getElementById('chefPrev').addEventListener('click', () => {
+  clearInterval(chefAutoPlay); chefAutoPlay = null;
+  document.getElementById('chefPlayPause').textContent = '▶ Play';
+  if (chefStep > -1) { chefStep--; showChefStep(chefStep); }
+});
+
+document.getElementById('chefNext').addEventListener('click', () => {
+  clearInterval(chefAutoPlay); chefAutoPlay = null;
+  document.getElementById('chefPlayPause').textContent = '▶ Play';
+  const max = (chefScript?.steps||[]).length;
+  if (chefStep < max) { chefStep++; showChefStep(chefStep); }
+});
+
+document.getElementById('chefPlayPause').addEventListener('click', () => {
+  if (chefAutoPlay) {
+    clearInterval(chefAutoPlay); chefAutoPlay = null;
+    document.getElementById('chefPlayPause').textContent = '▶ Play';
+    window.speechSynthesis?.cancel();
+  } else {
+    document.getElementById('chefPlayPause').textContent = '⏸ Pause';
+    chefAutoPlay = setInterval(() => {
+      const max = (chefScript?.steps||[]).length;
+      if (chefStep < max) { chefStep++; showChefStep(chefStep); }
+      else { clearInterval(chefAutoPlay); chefAutoPlay = null; document.getElementById('chefPlayPause').textContent = '▶ Replay'; }
+    }, 8000);
+  }
+});
 
 // ── Loading ──
 function setLoading(on,msg='Loading…'){
