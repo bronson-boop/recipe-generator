@@ -102,48 +102,52 @@ body {
 /* ── Option Cards ── */
 .option-cards {
   display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
   width: 100%;
-  max-width: 480px;
+  max-width: 420px;
   position: relative;
 }
 
 .option-card {
-  flex: 1;
-  min-width: 180px;
+  width: 100%;
   border: none;
-  border-radius: 28px;
-  padding: 34px 20px;
+  border-radius: 20px;
+  padding: 28px 32px;
   cursor: pointer;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
   transition: transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s;
   box-shadow: 0 8px 32px rgba(0,0,0,.15);
+  text-align: left;
 }
 
-.option-card:active { transform: scale(.94) !important; }
+.option-card:active { transform: scale(.97) !important; }
 
 .option-card.snap {
   background: rgba(255,255,255,.95);
-  color: #c94b00;
+  color: #1a1714;
 }
 
 .option-card.type {
   background: rgba(255,255,255,.15);
   color: #fff;
-  border: 2px solid rgba(255,255,255,.4);
-  backdrop-filter: blur(12px);
+  border: 2px solid rgba(255,255,255,.35);
+  backdrop-filter: blur(16px);
 }
 
-.option-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 16px 40px rgba(0,0,0,.2); }
+.option-card:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,.2); }
 
-.option-icon { font-size: 44px; }
-.option-title { font-size: 20px; font-weight: 800; letter-spacing: -.4px; }
-.option-desc { font-size: 13px; opacity: .7; text-align: center; font-weight: 500; }
+.option-icon { font-size: 40px; flex-shrink: 0; }
+
+.option-text { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+
+.option-title { font-size: 20px; font-weight: 800; letter-spacing: -.3px; }
+.option-desc { font-size: 14px; opacity: .65; font-weight: 500; }
+
+.option-arrow { font-size: 20px; opacity: .5; flex-shrink: 0; }
 
 /* ── Back button ── */
 .btn-back {
