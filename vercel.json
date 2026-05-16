@@ -1,6 +1,5 @@
 {
   "functions": {
-    "api/recipes.py": { "maxDuration": 60 },
-    "api/identify.py": { "maxDuration": 30 }
+    "api/*.py": { "maxDuration": 60 }
   }
 }
