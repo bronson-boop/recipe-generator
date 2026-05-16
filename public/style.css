@@ -857,3 +857,110 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   .lp-end{padding:70px 20px}
   .lp-footer{padding:20px}
 }
+
+/* ═══════════════════════════════════════════
+   Hero action cards
+═══════════════════════════════════════════ */
+
+/* Override old hero grid → column */
+.lp-hero{
+  display:flex;flex-direction:column;align-items:center;
+  min-height:calc(100vh - 76px);padding:56px 28px 80px;
+  max-width:none;margin:0;gap:0;
+}
+
+.lp-hero-top{
+  text-align:center;max-width:620px;margin-bottom:52px;
+}
+.lp-hero-top .lp-lead{font-size:19px;margin-bottom:0}
+
+/* Three-column card grid */
+.lp-action-cards{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:20px;width:100%;max-width:1080px;
+}
+
+/* Base card */
+.lp-ac{
+  position:relative;overflow:hidden;border-radius:24px;
+  padding:36px 30px 84px;min-height:360px;
+  display:flex;flex-direction:column;align-items:flex-start;
+  cursor:pointer;border:none;text-align:left;isolation:isolate;
+  transition:transform .3s cubic-bezier(.34,1.4,.64,1),box-shadow .3s ease;
+}
+
+/* Gradient fills */
+.lp-ac-snap   {background:linear-gradient(148deg,#8b1a00 0%,#d94f1e 45%,#ff9158 100%)}
+.lp-ac-type   {background:linear-gradient(148deg,#3b0764 0%,#6d28d9 45%,#a78bfa 100%)}
+.lp-ac-surprise{background:linear-gradient(148deg,#022c22 0%,#047857 45%,#34d399 100%)}
+
+/* Hover lift + colored glow */
+.lp-ac:hover{transform:translateY(-12px) scale(1.015)}
+.lp-ac-snap:hover   {box-shadow:0 36px 90px rgba(200,70,20,.5)}
+.lp-ac-type:hover   {box-shadow:0 36px 90px rgba(109,40,217,.5)}
+.lp-ac-surprise:hover{box-shadow:0 36px 90px rgba(4,120,87,.5)}
+.lp-ac:active{transform:scale(.97)}
+
+/* Top-left radial shine */
+.lp-ac-shine{
+  position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 25% 15%,rgba(255,255,255,.28) 0%,transparent 55%);
+}
+
+/* Diagonal stripe texture */
+.lp-ac::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(-45deg,rgba(255,255,255,.032) 0 1px,transparent 1px 18px);
+}
+
+/* Ghost background icon */
+.lp-ac-bg-icon{
+  position:absolute;right:-18px;bottom:-18px;
+  font-size:170px;opacity:.1;line-height:1;
+  transform:rotate(12deg);pointer-events:none;user-select:none;
+}
+
+/* Main floating icon */
+.lp-ac-icon{
+  font-size:68px;line-height:1;margin-bottom:22px;
+  filter:drop-shadow(0 6px 24px rgba(0,0,0,.35));
+  animation:acFloat 4.5s ease-in-out infinite;
+  position:relative;z-index:1;
+}
+.lp-ac-type .lp-ac-icon{animation-delay:1s}
+.lp-ac-surprise .lp-ac-icon{animation-delay:2s}
+@keyframes acFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+/* Text */
+.lp-ac-text{position:relative;z-index:1}
+.lp-ac-text h3{
+  font-size:28px;font-weight:900;color:#fff;
+  letter-spacing:-.5px;margin-bottom:10px;line-height:1.1;
+}
+.lp-ac-text p{font-size:15px;color:rgba(255,255,255,.76);line-height:1.62}
+
+/* Arrow circle */
+.lp-ac-arrow{
+  position:absolute;bottom:28px;right:28px;z-index:2;
+  width:50px;height:50px;border-radius:50%;
+  background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.26);
+  backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;
+  font-size:18px;color:#fff;
+  transition:background .22s,transform .22s;
+}
+.lp-ac:hover .lp-ac-arrow{background:rgba(255,255,255,.34);transform:translateX(5px)}
+
+/* Responsive */
+@media(max-width:900px){
+  .lp-action-cards{grid-template-columns:1fr;gap:14px}
+  .lp-ac{min-height:210px;padding:28px 26px 76px}
+  .lp-ac-icon{font-size:52px;margin-bottom:16px}
+  .lp-ac-text h3{font-size:22px}
+  .lp-ac-bg-icon{font-size:130px}
+}
+@media(max-width:600px){
+  .lp-hero{padding:36px 16px 56px}
+  .lp-hero-top{margin-bottom:32px}
+  .lp-hero-top .lp-h1{letter-spacing:-2.5px}
+  .lp-hero-top .lp-lead{font-size:16px}
+}

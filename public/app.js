@@ -60,8 +60,22 @@ function updateBnavActive(pageId) {
 
 // ── Landing page ──
 function goToApp() { showPage('pageLanding'); }
-['lpNavBtn','lpHeroCta','lpBottomCta'].forEach(id => {
+['lpNavBtn','lpBottomCta'].forEach(id => {
   document.getElementById(id).addEventListener('click', goToApp);
+});
+
+// Hero action card handlers — go directly into each flow
+document.getElementById('lpSnapCard').addEventListener('click', () => {
+  document.getElementById('photoInput').click();
+});
+document.getElementById('lpTypeCard').addEventListener('click', () => {
+  buildFiltersPanel('manualFilters');
+  buildQuickAdd();
+  showPage('pageManual');
+  setTimeout(() => document.getElementById('manualIngredientInput').focus(), 100);
+});
+document.getElementById('lpSurpriseCard').addEventListener('click', () => {
+  generateRecipes([], true);
 });
 
 // Scroll reveal for landing page feature cards + end CTA
