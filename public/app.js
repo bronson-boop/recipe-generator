@@ -44,7 +44,40 @@ function showPage(id) {
   const p = document.getElementById(id);
   p.hidden=false; p.classList.add('active'); window.scrollTo(0,0);
   if (id === 'pageLanding') updateDashboard();
+  // Bottom nav visibility — show on main browsing pages
+  const navPages = new Set(['pageLanding','pageResults','pageSaved','pageHistory']);
+  const nav = document.getElementById('bottomNav');
+  if (nav) nav.classList.toggle('hidden', !navPages.has(id));
+  updateBnavActive(id);
 }
+
+function updateBnavActive(pageId) {
+  document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));
+  const map = {pageLanding:'bnavHome',pageManual:'bnavFind',pageSaved:'bnavSavedNav',pageResults:'bnavFind',pageHistory:'bnavHome'};
+  const activeId = map[pageId];
+  if (activeId) document.getElementById(activeId)?.classList.add('active');
+}
+
+// ── Landing page ──
+function goToApp() { showPage('pageLanding'); }
+['lpNavBtn','lpHeroCta','lpBottomCta'].forEach(id => {
+  document.getElementById(id).addEventListener('click', goToApp);
+});
+
+// Scroll reveal for landing page feature cards + end CTA
+const lpObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('lp-in'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.lp-reveal').forEach(el => lpObserver.observe(el));
+
+// Bottom nav handlers
+document.getElementById('bnavHome').addEventListener('click',()=>showPage('pageLanding'));
+document.getElementById('bnavFind').addEventListener('click',()=>{
+  buildFiltersPanel('manualFilters');buildQuickAdd();showPage('pageManual');
+  setTimeout(()=>document.getElementById('manualIngredientInput').focus(),100);
+});
+document.getElementById('bnavSavedNav').addEventListener('click',showSaved);
+document.getElementById('bnavGroceryNav').addEventListener('click',openGrocery);
 
 // ── Dashboard ──
 function updateDashboard() {
@@ -58,6 +91,8 @@ function updateDashboard() {
   if (helloEl) helloEl.textContent = greetText;
 
   // Stats
+  syncStreakData();
+  document.getElementById('dashStreakCount').textContent = streakData.count;
   document.getElementById('dashSavedCount').textContent = savedRecipes.length;
   document.getElementById('dashGroceryCount').textContent = groceryList.filter(g=>!g.checked).length;
   document.getElementById('dashCookedCount').textContent = cookedLog.length;
@@ -121,6 +156,7 @@ function updateDashboard() {
 }
 
 // Stat pill click handlers
+document.getElementById('dashStreakStat').addEventListener('click', showHistory);
 document.getElementById('dashSavedStat').addEventListener('click', showSaved);
 document.getElementById('dashGroceryStat').addEventListener('click', openGrocery);
 document.getElementById('dashCookedStat').addEventListener('click', showHistory);
@@ -130,9 +166,53 @@ document.documentElement.setAttribute('data-theme','dark');
 
 // ── Cooked log ──
 function markCooked(recipe) {
-  const today = new Date().toDateString();
-  cookedLog.unshift({name:recipe.name, date:today});
+  const today = getDateKey();
+  const alreadyCookedToday = cookedLog.some(c=>c.name===recipe.name&&normalizeCookDate(c.date)===today);
+  if (alreadyCookedToday) return;
+  cookedLog.unshift({name:recipe.name, date:new Date().toDateString()});
   localStorage.setItem('cookedLog', JSON.stringify(cookedLog));
+  updateStreakFor(today);
+  updateDashboard();
+}
+function getDateKey(date=new Date()) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth()+1).padStart(2,'0');
+  const d = String(date.getDate()).padStart(2,'0');
+  return `${y}-${m}-${d}`;
+}
+function addDays(dateKey, days) {
+  const [y,m,d] = dateKey.split('-').map(Number);
+  const date = new Date(y, m-1, d);
+  date.setDate(date.getDate()+days);
+  return getDateKey(date);
+}
+function normalizeCookDate(date) {
+  if (!date) return '';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(date)) return date;
+  const parsed = new Date(date);
+  return Number.isNaN(parsed.getTime()) ? '' : getDateKey(parsed);
+}
+function updateStreakFor(today) {
+  if (streakData.lastDate === today) return;
+  streakData.count = streakData.lastDate === addDays(today,-1) ? streakData.count+1 : 1;
+  streakData.lastDate = today;
+  localStorage.setItem('streakData', JSON.stringify(streakData));
+}
+function syncStreakData() {
+  const cookedDays = [...new Set(cookedLog.map(c=>normalizeCookDate(c.date)).filter(Boolean))].sort().reverse();
+  const today = getDateKey();
+  if (!cookedDays.length || cookedDays[0] < addDays(today,-1)) {
+    streakData = {lastDate:cookedDays[0]||'', count:0};
+  } else {
+    let count = 0;
+    let cursor = cookedDays[0];
+    while (cookedDays.includes(cursor)) {
+      count++;
+      cursor = addDays(cursor,-1);
+    }
+    streakData = {lastDate:cookedDays[0], count};
+  }
+  localStorage.setItem('streakData', JSON.stringify(streakData));
 }
 
 
@@ -608,12 +688,18 @@ function renderCookStep() {
   document.getElementById('cookStepText').textContent=steps[cookStep]||'Done!';
   document.getElementById('cookStepCounter').textContent=`Step ${cookStep+1} of ${steps.length}`;
   document.getElementById('prevStep').disabled=cookStep===0;
-  document.getElementById('nextStep').disabled=cookStep>=steps.length-1;
+  document.getElementById('nextStep').disabled=!steps.length;
+  document.getElementById('nextStep').textContent=cookStep>=steps.length-1?'Done':'Next →';
   stopTimer(); resetTimer();
 }
 document.getElementById('backFromCook').addEventListener('click',()=>document.getElementById('pageCook').classList.remove('active'));
 document.getElementById('prevStep').addEventListener('click',()=>{if(cookStep>0){cookStep--;renderCookStep()}});
-document.getElementById('nextStep').addEventListener('click',()=>{const s=(cookRecipe.steps||[]);if(cookStep<s.length-1){cookStep++;renderCookStep()}});
+document.getElementById('nextStep').addEventListener('click',()=>{
+  const s=(cookRecipe.steps||[]);
+  if(cookStep<s.length-1){cookStep++;renderCookStep();return;}
+  markCooked(cookRecipe);
+  document.getElementById('pageCook').classList.remove('active');
+});
 
 // Timer
 function pad(n){return String(n).padStart(2,'0')}
@@ -1037,6 +1123,6 @@ window.addEventListener('load',()=>{
   const hash=location.hash;
   if(hash.startsWith('#recipe=')){
     try{const r=JSON.parse(decodeURIComponent(escape(atob(hash.slice(8)))));const grid=document.getElementById('recipeGrid');grid.innerHTML='';grid.appendChild(buildCard(r,[],0));document.getElementById('resultsTitle').textContent=r.name;showPage('pageResults')}
-    catch{showPage('pageLanding')}
-  } else showPage('pageLanding');
+    catch{showPage('pageWelcome')}
+  } else showPage('pageWelcome');
 });

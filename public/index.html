@@ -3,13 +3,126 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta name="theme-color" content="#111316"/>
   <title>What Can I Cook?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
+<!-- ═══ WELCOME / LANDING PAGE ═══ -->
+<div id="pageWelcome" class="page active">
+
+  <!-- Ambient blobs -->
+  <div class="lp-blobs" aria-hidden="true">
+    <div class="lp-blob b1"></div>
+    <div class="lp-blob b2"></div>
+    <div class="lp-blob b3"></div>
+  </div>
+
+  <!-- Top nav -->
+  <nav class="lp-nav">
+    <div class="lp-nav-brand">🍳 What Can I Cook?</div>
+    <button class="lp-nav-btn" id="lpNavBtn">Try it free →</button>
+  </nav>
+
+  <!-- Hero -->
+  <section class="lp-hero">
+    <div class="lp-hero-content">
+      <div class="lp-badge">
+        <span class="lp-badge-dot"></span>
+        AI-powered recipe discovery
+      </div>
+      <h1 class="lp-h1">Turn your<br><em class="lp-h1-accent">ingredients</em><br>into meals</h1>
+      <p class="lp-lead">Snap your fridge, type what you have, or let us surprise you. Get personalized recipes in seconds — no sign up needed.</p>
+      <div class="lp-cta-row">
+        <button class="lp-btn-primary" id="lpHeroCta">Start Cooking <span class="lp-btn-arr">→</span></button>
+        <div class="lp-social">
+          <div class="lp-social-avs">
+            <span>👨‍🍳</span><span>👩‍🍳</span><span>🧑‍🍳</span>
+          </div>
+          <span class="lp-social-label">Loved by home cooks</span>
+        </div>
+      </div>
+    </div>
+    <div class="lp-chips-col" aria-hidden="true">
+      <div class="lp-chip c1">🥕 Carrot</div>
+      <div class="lp-chip c2">🧄 Garlic</div>
+      <div class="lp-chip c3">🍋 Lemon</div>
+      <div class="lp-chip c4">🥩 Beef</div>
+      <div class="lp-chip c5">🧀 Cheese</div>
+      <div class="lp-chip c6">🍅 Tomato</div>
+      <div class="lp-chip c7">🥦 Broccoli</div>
+      <div class="lp-chip c8">🥚 Eggs</div>
+    </div>
+  </section>
+
+  <!-- Wave transition -->
+  <div class="lp-wave" aria-hidden="true">
+    <svg viewBox="0 0 1440 72" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path class="lp-wave-fill" d="M0,36 C240,72 480,0 720,36 C960,72 1200,0 1440,36 L1440,72 L0,72 Z"/>
+    </svg>
+  </div>
+
+  <!-- Feature cards -->
+  <section class="lp-feats">
+    <div class="lp-feats-grid">
+      <div class="lp-feat lp-reveal">
+        <div class="lp-feat-icon">📸</div>
+        <h3>Snap a Photo</h3>
+        <p>Point your camera at your fridge. AI identifies every ingredient in seconds.</p>
+      </div>
+      <div class="lp-feat lp-reveal">
+        <div class="lp-feat-icon">✏️</div>
+        <h3>Type It In</h3>
+        <p>List your ingredients and dietary preferences. Get perfectly matched recipes.</p>
+      </div>
+      <div class="lp-feat lp-reveal">
+        <div class="lp-feat-icon">🎲</div>
+        <h3>Surprise Me</h3>
+        <p>Let us pick something amazing. Discover new dishes you'd never think to try.</p>
+      </div>
+      <div class="lp-feat lp-reveal">
+        <div class="lp-feat-icon">❤️</div>
+        <h3>Save &amp; Plan</h3>
+        <p>Build your personal cookbook, plan your week, and track what you've cooked.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ingredient marquee -->
+  <div class="lp-marquee-outer">
+    <div class="lp-marquee-row">
+      <span>🥕 Carrot</span><span>🧄 Garlic</span><span>🍋 Lemon</span><span>🥩 Beef</span>
+      <span>🧀 Cheese</span><span>🍅 Tomato</span><span>🥦 Broccoli</span><span>🥚 Eggs</span>
+      <span>🍝 Pasta</span><span>🥬 Spinach</span><span>🧅 Onion</span><span>🥑 Avocado</span>
+      <span>🌶️ Chili</span><span>🍗 Chicken</span><span>🫒 Olive oil</span><span>🧈 Butter</span>
+      <span>🥕 Carrot</span><span>🧄 Garlic</span><span>🍋 Lemon</span><span>🥩 Beef</span>
+      <span>🧀 Cheese</span><span>🍅 Tomato</span><span>🥦 Broccoli</span><span>🥚 Eggs</span>
+      <span>🍝 Pasta</span><span>🥬 Spinach</span><span>🧅 Onion</span><span>🥑 Avocado</span>
+      <span>🌶️ Chili</span><span>🍗 Chicken</span><span>🫒 Olive oil</span><span>🧈 Butter</span>
+    </div>
+  </div>
+
+  <!-- Bottom CTA -->
+  <section class="lp-end">
+    <div class="lp-end-inner">
+      <h2 class="lp-reveal">Ready to discover<br>what you can cook?</h2>
+      <p class="lp-reveal">No sign up. No download. Just open the fridge.</p>
+      <button class="lp-btn-primary lp-btn-lg lp-reveal" id="lpBottomCta">Get Cooking Now →</button>
+    </div>
+  </section>
+
+  <footer class="lp-footer">
+    <p>Made with ❤️ for home cooks everywhere</p>
+  </footer>
+
+</div>
+
 <!-- DASHBOARD -->
-<div id="pageLanding" class="page active">
+<div id="pageLanding" class="page">
 
   <!-- Header -->
   <div class="dash-header">
@@ -25,6 +138,11 @@
       </div>
       <!-- Stats strip -->
       <div class="dash-stats-strip">
+        <div class="dash-stat-pill" id="dashStreakStat">
+          <span class="dsp-icon">🔥</span>
+          <span class="dsp-val" id="dashStreakCount">0</span>
+          <span class="dsp-label">Streak</span>
+        </div>
         <div class="dash-stat-pill" id="dashSavedStat">
           <span class="dsp-icon">❤️</span>
           <span class="dsp-val" id="dashSavedCount">0</span>
@@ -379,6 +497,26 @@
 
 <!-- CANVAS for Instagram share (hidden) -->
 <canvas id="shareCanvas" hidden></canvas>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav hidden" id="bottomNav">
+  <button class="bnav-item active" id="bnavHome">
+    <span class="bnav-icon">⊞</span>
+    <span class="bnav-label">Home</span>
+  </button>
+  <button class="bnav-item" id="bnavFind">
+    <span class="bnav-icon">🔍</span>
+    <span class="bnav-label">Find</span>
+  </button>
+  <button class="bnav-item" id="bnavSavedNav">
+    <span class="bnav-icon">❤️</span>
+    <span class="bnav-label">Saved</span>
+  </button>
+  <button class="bnav-item" id="bnavGroceryNav">
+    <span class="bnav-icon">🛒</span>
+    <span class="bnav-label">Grocery</span>
+  </button>
+</nav>
 
 <script src="app.js"></script>
 </body>
