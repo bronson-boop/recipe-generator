@@ -3,6 +3,8 @@ const ASSETS = ['/', '/index.html', '/style.css', '/app.js'];
 
 self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS))));
 self.addEventListener('fetch', e => {
-  if (e.request.url.includes('/api/')) return;
+  const url = new URL(e.request.url);
+  if (url.pathname.includes('/api/')) return;
+  if (url.pathname !== '/' && url.pathname !== '/index.html' && url.pathname.endsWith('.html')) return;
   e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
 });
